@@ -117,15 +117,19 @@ function init() {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(surroundingSquares);
+          divEl.classList.add(`surround-${surroundingSquares}`);
         }
       }
     });
   });
-  
-
+  for (let i=1; i<9; i++) {
+      let surroundDiv = document.querySelectorAll(`.surround-${i}`)
+      console.log(surroundDiv)
+      for (let div of surroundDiv) {
+          div.innerHTML = `${i}`
+  }
+ }
 }
-
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
