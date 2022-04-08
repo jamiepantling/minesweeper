@@ -10,6 +10,7 @@ init();
 document
   .getElementById("grid-container")
   .addEventListener("click", gridClickHandler);
+
 document
   .getElementById("grid-container")
   .addEventListener("contextmenu", gridRightClickHandler);
@@ -18,8 +19,8 @@ document.getElementById("reset").addEventListener("click", init);
 
 // **Functions**
 
-//initialising function - sets grid array up, 
-//removes previous square divs from doc, 
+//initialising function - sets grid array up,
+//removes previous square divs from doc,
 //renders new grid to doc
 
 function init() {
@@ -38,7 +39,6 @@ function init() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
 
-  
   // removes squares from doc
   let divEl = document.querySelectorAll(".square");
   for (let div of divEl) {
@@ -54,33 +54,79 @@ function init() {
       const gridContainerEl = document.getElementById("grid-container");
       gridContainerEl.appendChild(squareDiv);
     });
-  })
+  });
 
   // places mines in grid
   let mineCoords = [];
   let randomNums = [];
-  for (let i=1; i <= 40; i++) {
+  for (let i = 1; i <= 40; i++) {
     let num = getRandomNumber(11, 0);
-    randomNums.push(num)
+    randomNums.push(num);
   }
-  for(let i = 0; i < randomNums.length; i = i + 2) {
-      mineCoords.push([randomNums[i], randomNums[i+1]])
+  for (let i = 0; i < randomNums.length; i = i + 2) {
+    mineCoords.push([randomNums[i], randomNums[i + 1]]);
   }
-  mineCoords.forEach(function(coordPair) {
-      grid[coordPair[0]][coordPair[1]] = "m";
-  })
+  mineCoords.forEach(function (coordPair) {
+    grid[coordPair[0]][coordPair[1]] = "m";
+  });
+
   // add mined elements in grid array to class of equivalent div elements in DOM
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-        if (square === "m") {
-            divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-            divEl.classList.add("mine")
+      if (square === "m") {
+        divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+        divEl.classList.add("mine");
+      }
+    });
+  });
+
+  // places number around mines
+
+  grid.forEach(function (row, rowNumber) {
+    row.forEach(function (square, columnNumber) {
+      if (square !== "m") {
+        if (
+          rowNumber !== 0 &&
+          rowNumber !== 11 &&
+          columnNumber !== 0 &&
+          columnNumber !== 11
+        ) {
+          let surroundingSquares = 0;
+          if (grid[rowNumber - 1][columnNumber - 1] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber - 1][columnNumber] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber][columnNumber - 1] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber][columnNumber + 1] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber + 1][columnNumber] === "m") {
+            surroundingSquares++;
+          }
+          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+            surroundingSquares++;
+          }
+          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+          divEl.classList.add(surroundingSquares);
         }
-    })
-    })
+      }
+    });
+  });
+  
+
 }
 
-// click handlers get coords from click and 
+// click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
   let coords = event.target.id;
@@ -99,8 +145,8 @@ function gridRightClickHandler(event) {
 
 // random number generator
 function getRandomNumber(max, min) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // renders grid from array data
 function render() {
