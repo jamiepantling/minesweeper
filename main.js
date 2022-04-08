@@ -37,10 +37,15 @@ function init() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
+
+  
+  // removes squares from doc
   let divEl = document.querySelectorAll(".square");
   for (let div of divEl) {
     div.remove();
   }
+
+  // puts new squares in doc
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       const squareDiv = document.createElement("div");
@@ -49,7 +54,30 @@ function init() {
       const gridContainerEl = document.getElementById("grid-container");
       gridContainerEl.appendChild(squareDiv);
     });
-  });
+  })
+
+  // places mines in grid
+  let mineCoords = [];
+  let randomNums = [];
+  for (let i=1; i <= 40; i++) {
+    let num = getRandomNumber(11, 0);
+    randomNums.push(num)
+  }
+  for(let i = 0; i < randomNums.length; i = i + 2) {
+      mineCoords.push([randomNums[i], randomNums[i+1]])
+  }
+  mineCoords.forEach(function(coordPair) {
+      grid[coordPair[0]][coordPair[1]] = "m";
+  })
+  // add mined elements in grid array to class of equivalent div elements in DOM
+  grid.forEach(function (row, rowNumber) {
+    row.forEach(function (square, columnNumber) {
+        if (square === "m") {
+            divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+            divEl.classList.add("mine")
+        }
+    })
+    })
 }
 
 // click handlers get coords from click and 
@@ -60,6 +88,7 @@ function gridClickHandler(event) {
   grid[coords.split(",")[0]][[coords.split(",")[1]]] = 1;
   render();
 }
+
 function gridRightClickHandler(event) {
   let coords = event.target.id;
   console.log("Right clicked " + coords);
@@ -67,6 +96,11 @@ function gridRightClickHandler(event) {
   event.preventDefault();
   render();
 }
+
+// random number generator
+function getRandomNumber(max, min) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 
 // renders grid from array data
 function render() {
