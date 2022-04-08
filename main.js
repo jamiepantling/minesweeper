@@ -79,8 +79,11 @@ function init() {
       }
     });
   });
-
-  // places number around mines
+  let mineEl = document.querySelectorAll(".mine");
+  for (let mine of mineEl) {
+    mine.innerHTML = "✪";
+  }
+  // place numbers around mines
 
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
@@ -91,29 +94,71 @@ function init() {
           columnNumber !== 0 &&
           columnNumber !== 11
         ) {
+          // Where the square is not an edge or corner
           let surroundingSquares = 0;
           if (grid[rowNumber - 1][columnNumber - 1] === "m") {
             surroundingSquares++;
-          }
-          if (grid[rowNumber - 1][columnNumber] === "m") {
+          } else if (grid[rowNumber - 1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber][columnNumber - 1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber][columnNumber + 1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber + 1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber + 1][columnNumber + 1] === "m") {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1] === "m") {
-            surroundingSquares++;
-          }
-          if (grid[rowNumber][columnNumber - 1] === "m") {
-            surroundingSquares++;
-          }
+          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+          divEl.classList.add(`surround-${surroundingSquares}`);
+        } else if (rowNumber === 0 && columnNumber === 0) {
+          //Top left corner
+          let surroundingSquares = 0;
           if (grid[rowNumber][columnNumber + 1] === "m") {
             surroundingSquares++;
-          }
-          if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+          } else if (grid[rowNumber + 1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber + 1][columnNumber + 1] === "m") {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+          divEl.classList.add(`surround-${surroundingSquares}`);
+        } else if (rowNumber === 0 && columnNumber === 11) {
+          //Top right corner
+          let surroundingSquares = 0;
+          if (grid[rowNumber][columnNumber-1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber+1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber+1][columnNumber-1] === "m") {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+          divEl.classList.add(`surround-${surroundingSquares}`);
+        } else if (rowNumber === 11 && columnNumber === 0) {
+          //Bottom left corner
+          let surroundingSquares = 0;
+          if (grid[rowNumber-1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber-1][columnNumber+1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber][columnNumber+1] === "m") {
+            surroundingSquares++;
+          }
+          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
+          divEl.classList.add(`surround-${surroundingSquares}`);
+        } else if (rowNumber === 11 && columnNumber === 11) {
+          //Bottom right corner
+          let surroundingSquares = 0;
+          if (grid[rowNumber-1][columnNumber] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber-1][columnNumber-1] === "m") {
+            surroundingSquares++;
+          } else if (grid[rowNumber][columnNumber-1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
@@ -122,13 +167,13 @@ function init() {
       }
     });
   });
-  for (let i=1; i<9; i++) {
-      let surroundDiv = document.querySelectorAll(`.surround-${i}`)
-      console.log(surroundDiv)
-      for (let div of surroundDiv) {
-          div.innerHTML = `${i}`
+  for (let i = 1; i < 9; i++) {
+    let surroundDiv = document.querySelectorAll(`.surround-${i}`);
+    console.log(surroundDiv);
+    for (let div of surroundDiv) {
+      div.innerHTML = `${i}`;
+    }
   }
- }
 }
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
