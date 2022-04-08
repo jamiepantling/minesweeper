@@ -50,11 +50,31 @@ h1 {
     width: 300px;
     margin: 50px auto 0 auto;
     border: 1px solid black;
-    border-left: 1px solid black
+    border-left: 1px solid black;
+    font-family: courier;
+
     }
 .square {
     height: 25px;
     width: 25px;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+.surround-1 {
+    color: blue
+}
+.surround-2 {
+    color: green;
+}
+.surround-3 {
+    color: red
+}
+.surround-4 {
+    color: darkblue;
 }
