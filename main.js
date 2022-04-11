@@ -66,6 +66,7 @@ function init() {
   for (let i = 0; i < randomNums.length; i = i + 2) {
     mineCoords.push([randomNums[i], randomNums[i + 1]]);
   }
+  console.log(mineCoords)
   mineCoords.forEach(function (coordPair) {
     grid[coordPair[0]][coordPair[1]] = "m";
   });
@@ -81,7 +82,8 @@ function init() {
   });
   let mineEl = document.querySelectorAll(".mine");
   for (let mine of mineEl) {
-    mine.innerHTML = "✪";
+    mine.innerHTML = "<p>✪</p>";
+    mine.classList.add("hidden")
   }
   // place numbers around mines
 
@@ -262,12 +264,25 @@ function init() {
       }
     });
   });
+  //Adds marker to square in grid
   for (let i = 1; i < 9; i++) {
     let surroundDiv = document.querySelectorAll(`.surround-${i}`);
-    console.log(surroundDiv);
     for (let div of surroundDiv) {
-      div.innerHTML = `${i}`;
+      let pEl = document.createElement("p");
+      // pEl.classList.add("hidden")
+      pEl.innerHTML = `${i}`;
+      div.appendChild(pEl);
+      // div.classList.add("hidden")
     }
+  }
+  //Adds hidden class to all divs in grid and all p elements
+  let divs = document.querySelectorAll("div");
+  for (let div of divs) {
+    div.classList.add("hidden")
+  }
+  let ps = document.querySelectorAll("p");
+  for (let p of ps) {
+    p.classList.add("hidden")
   }
 }
 // click handlers get coords from click and
@@ -298,7 +313,11 @@ function render() {
     row.forEach(function (square, columnNumber) {
       if (square === 1) {
         divEl = document.getElementById(rowNumber + "," + columnNumber);
-        divEl.style.backgroundColor = "red";
+        divEl.classList.remove("hidden");
+        let pEl = divEl.querySelector("p");
+        if (pEl) {
+        pEl.classList.remove("hidden");
+        }
       } else if (square === 2) {
         divEl = document.getElementById(rowNumber + "," + columnNumber);
         divEl.style.backgroundColor = "blue";
