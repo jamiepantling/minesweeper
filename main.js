@@ -25,18 +25,18 @@ document.getElementById("reset").addEventListener("click", init);
 
 function init() {
   grid = [
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{},{},{}]
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
   ];
 
   // removes squares from doc
@@ -45,18 +45,31 @@ function init() {
     div.remove();
   }
 
-  // puts new squares in doc
+  // sets up objects, puts new squares in doc
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
+      square.mine = false;
+      if (
+        rowNumber === 0 ||
+        columnNumber === 0 ||
+        rowNumber === 11 ||
+        columnNumber === 11
+      ) {
+        square.edge = true;
+      } else square.edge = false;
+      square.hidden = true;
       const squareDiv = document.createElement("div");
       squareDiv.classList.add("square");
       squareDiv.id = `${rowNumber},${columnNumber}`;
+      let pEl = document.createElement("p")
+      squareDiv.appendChild(pEl)
       const gridContainerEl = document.getElementById("grid-container");
       gridContainerEl.appendChild(squareDiv);
     });
   });
 
   // places mines in grid
+
   let mineCoords = [];
   let randomNums = [];
   for (let i = 1; i <= 40; i++) {
@@ -66,7 +79,7 @@ function init() {
   for (let i = 0; i < randomNums.length; i = i + 2) {
     mineCoords.push([randomNums[i], randomNums[i + 1]]);
   }
-  console.log(mineCoords)
+  console.log(mineCoords);
   mineCoords.forEach(function (coordPair) {
     grid[coordPair[0]][coordPair[1]].mine = true;
   });
@@ -83,19 +96,19 @@ function init() {
   let mineEl = document.querySelectorAll(".mine");
   for (let mine of mineEl) {
     mine.innerHTML = "<p>✪</p>";
-    mine.classList.add("hidden")
   }
-  // place numbers around mines
+  // place numbers around mines in grid array
 
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-      if (!square.mine === true) {
-        if (
-          rowNumber !== 0 &&
-          rowNumber !== 11 &&
-          columnNumber !== 0 &&
-          columnNumber !== 11
-        ) {
+      if (
+        rowNumber !== 0 &&
+        rowNumber !== 11 &&
+        columnNumber !== 0 &&
+        columnNumber !== 11
+      ) {
+        grid[rowNumber][columnNumber].location = "central";
+        if (!square.mine === true) {
           // Where the square is not an edge or corner
           let surroundingSquares = 0;
           if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
@@ -123,11 +136,11 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("central");
-        } else if (rowNumber === 0 && columnNumber === 0) {
-          //Top left corner
+        }
+      } else if (rowNumber === 0 && columnNumber === 0) {
+        //Top left corner
+        grid[rowNumber][columnNumber].location = "top-left";
+        if (!square.mine === true) {
           let surroundingSquares = 0;
           if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
@@ -139,12 +152,12 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("top-left");
-        } else if (rowNumber === 0 && columnNumber === 11) {
-          //Top right corner
-          let surroundingSquares = 0;
+        }
+      } else if (rowNumber === 0 && columnNumber === 11) {
+        //Top right corner
+        grid[rowNumber][columnNumber].location = "top-right";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
           if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
@@ -155,11 +168,11 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("top-right");
-        } else if (rowNumber === 11 && columnNumber === 0) {
-          //Bottom left corner
+        }
+      } else if (rowNumber === 11 && columnNumber === 0) {
+        //Bottom left corner
+        grid[rowNumber][columnNumber].location = "bottom-left";
+        if (!square.mine === true) {
           let surroundingSquares = 0;
           if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
@@ -171,12 +184,12 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].suround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("bottom-left");
-        } else if (rowNumber === 11 && columnNumber === 11) {
-          //Bottom right corner
-          let surroundingSquares = 0;
+        }
+      } else if (rowNumber === 11 && columnNumber === 11) {
+        //Bottom right corner
+        grid[rowNumber][columnNumber].location = "bottom-right";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
           if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
@@ -187,12 +200,12 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("bottom-right");
-        } else if (rowNumber === 0 && columnNumber > 0 && columnNumber < 11) {
-          // Top row,  not corners
-          let surroundingSquares = 0;
+        }
+      } else if (rowNumber === 0 && columnNumber > 0 && columnNumber < 11) {
+        // Top row,  not corners
+        grid[rowNumber][columnNumber].location = "top-row";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
           if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
@@ -209,12 +222,12 @@ function init() {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("top-row");
-        } else if (rowNumber === 11 && columnNumber > 0 && columnNumber < 11) {
-          // Bottom row,  not corners
-          let surroundingSquares = 0;
+        }
+      } else if (rowNumber === 11 && columnNumber > 0 && columnNumber < 11) {
+        // Bottom row,  not corners
+        grid[rowNumber][columnNumber].location = "bottom-row";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
           if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
@@ -230,87 +243,79 @@ function init() {
           if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("bottom-row");
-        } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 0) {
-          // Left column,  not corners
-          let surroundingSquares = 0;
-          if (grid[rowNumber-1][columnNumber].mine === true) {
+        }
+        grid[rowNumber][columnNumber].surround = surroundingSquares;
+      } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 0) {
+        // Left column,  not corners
+        grid[rowNumber][columnNumber].location = "left-column";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber-1][columnNumber+1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber +1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber +1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
           if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("left-column");
-        } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 11) {
-          // Right column,  not corners
-          let surroundingSquares = 0;
-          if (grid[rowNumber-1][columnNumber -1].mine === true) {
+        }
+      } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 11) {
+        // Right column,  not corners
+        grid[rowNumber][columnNumber].location = "right-column";
+        let surroundingSquares = 0;
+        if (!square.mine === true) {
+          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber-1][columnNumber].mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber -1].mine === true) {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber+1][columnNumber-1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
           if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
-          divEl = document.getElementById(`${rowNumber},${columnNumber}`);
-          divEl.classList.add(`surround-${surroundingSquares}`);
-          divEl.classList.add("right-column");
         }
       }
     });
   });
-  console.log(grid)
-  //Adds marker to square in DOM-grid
-  for (let i = 1; i < 9; i++) {
-    let surroundDiv = document.querySelectorAll(`.surround-${i}`);
-    for (let div of surroundDiv) {
-      let pEl = document.createElement("p");
-      // pEl.classList.add("hidden")
-      pEl.innerHTML = `${i}`;
-      div.appendChild(pEl);
-      // div.classList.add("hidden")
-    }
-  }
+  console.log(grid);
+  
+
+
   //Adds hidden class to all divs in DOM-grid and all p elements
   let divs = document.querySelectorAll("div");
   for (let div of divs) {
-    div.classList.add("hidden")
+    div.classList.add("hidden");
   }
   let ps = document.querySelectorAll("p");
   for (let p of ps) {
-    p.classList.add("hidden")
+    p.classList.add("hidden");
   }
-  console.log(grid)
+  console.log(grid);
 }
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
   let coords = event.target.id;
   console.log("Clicked " + coords);
-  grid[coords.split(",")[0]][[coords.split(",")[1]]].hidden = false;
+  if 
+  (grid[coords.split(",")[0]][[coords.split(",")[1]]].hidden = true) {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].hidden = false
+  };
   render();
 }
 
@@ -329,28 +334,29 @@ function getRandomNumber(max, min) {
 
 // renders grid from array data
 function render() {
+  
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
+      divEl = document.getElementById(rowNumber + "," + columnNumber);
+      pEl = divEl.querySelector("p")
+      if (square.surround) {
+        pEl.innerHTML = `${square.surround}`
+        pEl.classList.add(`surround-${square.surround}`)
+      }
       if (square.hidden === false) {
-        divEl = document.getElementById(rowNumber + "," + columnNumber);
         divEl.classList.remove("hidden");
-        let pEl = divEl.querySelector("p");
-        if (pEl) {
         pEl.classList.remove("hidden");
-        }
       } else if (square.flagged === true) {
-        divEl = document.getElementById(rowNumber + "," + columnNumber);
-        divEl.style.backgroundColor = "blue";
+          divEl.style.backgroundColor = "blue";
       }
     });
   });
 }
 
-
 // function flood(square) {
-//   if (square.classList.contains("mine")) {
+//   if (square.mine === true) {
 //     return
-//   } 
+//   }
 //   if (square.classList.contains("central")) {
 //      square.classList.remove("hidden")
 //      square.querySelector("p").classList.remove("hidden")
@@ -359,14 +365,13 @@ function render() {
 //   else {
 //     //unhide
 //     flood(next square)
-//   }
+// //   }
 
-//   if central:
-//   unhide; 
-//   look at upper left: 
-//     if not mine, reveal
-//     if not Number, flood
-//   look at upper middle
-//     if not mine, reveal
-//     if not n flood
-
+//   // if central:
+//   // unhide;
+// look at upper left:
+//   if not mine, reveal
+//   if not Number, flood
+// look at upper middle
+//   if not mine, reveal
+//   if not n flood
