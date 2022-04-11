@@ -25,18 +25,18 @@ document.getElementById("reset").addEventListener("click", init);
 
 function init() {
   grid = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}],
+    [{},{},{},{},{},{},{},{},{},{},{},{}]
   ];
 
   // removes squares from doc
@@ -68,13 +68,13 @@ function init() {
   }
   console.log(mineCoords)
   mineCoords.forEach(function (coordPair) {
-    grid[coordPair[0]][coordPair[1]] = "m";
+    grid[coordPair[0]][coordPair[1]].mine = true;
   });
 
   // add mined elements in grid array to class of equivalent div elements in DOM
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-      if (square === "m") {
+      if (square.mine === true) {
         divEl = document.getElementById(`${rowNumber},${columnNumber}`);
         divEl.classList.add("mine");
       }
@@ -89,7 +89,7 @@ function init() {
 
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-      if (square !== "m") {
+      if (!square.mine === true) {
         if (
           rowNumber !== 0 &&
           rowNumber !== 11 &&
@@ -98,173 +98,192 @@ function init() {
         ) {
           // Where the square is not an edge or corner
           let surroundingSquares = 0;
-          if (grid[rowNumber - 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber] === "m") {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber - 1] === "m") {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1] === "m") {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("central");
         } else if (rowNumber === 0 && columnNumber === 0) {
           //Top left corner
           let surroundingSquares = 0;
-          if (grid[rowNumber][columnNumber + 1] === "m") {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("top-left");
         } else if (rowNumber === 0 && columnNumber === 11) {
           //Top right corner
           let surroundingSquares = 0;
-          if (grid[rowNumber][columnNumber - 1] === "m") {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("top-right");
         } else if (rowNumber === 11 && columnNumber === 0) {
           //Bottom left corner
           let surroundingSquares = 0;
-          if (grid[rowNumber - 1][columnNumber] === "m") {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1] === "m") {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].suround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("bottom-left");
         } else if (rowNumber === 11 && columnNumber === 11) {
           //Bottom right corner
           let surroundingSquares = 0;
-          if (grid[rowNumber - 1][columnNumber] === "m") {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber - 1] === "m") {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("bottom-right");
         } else if (rowNumber === 0 && columnNumber > 0 && columnNumber < 11) {
           // Top row,  not corners
           let surroundingSquares = 0;
-          if (grid[rowNumber][columnNumber - 1] === "m") {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1] === "m") {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("top-row");
         } else if (rowNumber === 11 && columnNumber > 0 && columnNumber < 11) {
           // Bottom row,  not corners
           let surroundingSquares = 0;
-          if (grid[rowNumber][columnNumber - 1] === "m") {
+          if (grid[rowNumber][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1] === "m") {
+          if (grid[rowNumber][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber - 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber] === "m") {
+          if (grid[rowNumber - 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("bottom-row");
         } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 0) {
           // Left column,  not corners
           let surroundingSquares = 0;
-          if (grid[rowNumber-1][columnNumber] === "m") {
+          if (grid[rowNumber-1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber-1][columnNumber+1] === "m") {
+          if (grid[rowNumber-1][columnNumber+1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber +1] === "m") {
+          if (grid[rowNumber][columnNumber +1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber +1][columnNumber] === "m") {
+          if (grid[rowNumber +1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("left-column");
         } else if (rowNumber > 0 && rowNumber < 11 && columnNumber === 11) {
           // Right column,  not corners
           let surroundingSquares = 0;
-          if (grid[rowNumber-1][columnNumber -1] === "m") {
+          if (grid[rowNumber-1][columnNumber -1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber-1][columnNumber] === "m") {
+          if (grid[rowNumber-1][columnNumber].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber -1] === "m") {
+          if (grid[rowNumber][columnNumber -1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber+1][columnNumber-1] === "m") {
+          if (grid[rowNumber+1][columnNumber-1].mine === true) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber] === "m") {
+          if (grid[rowNumber + 1][columnNumber].mine === true) {
             surroundingSquares++;
           }
+          grid[rowNumber][columnNumber].surround = surroundingSquares;
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
           divEl.classList.add(`surround-${surroundingSquares}`);
+          divEl.classList.add("right-column");
         }
       }
     });
   });
-  //Adds marker to square in grid
+  console.log(grid)
+  //Adds marker to square in DOM-grid
   for (let i = 1; i < 9; i++) {
     let surroundDiv = document.querySelectorAll(`.surround-${i}`);
     for (let div of surroundDiv) {
@@ -275,7 +294,7 @@ function init() {
       // div.classList.add("hidden")
     }
   }
-  //Adds hidden class to all divs in grid and all p elements
+  //Adds hidden class to all divs in DOM-grid and all p elements
   let divs = document.querySelectorAll("div");
   for (let div of divs) {
     div.classList.add("hidden")
@@ -284,20 +303,21 @@ function init() {
   for (let p of ps) {
     p.classList.add("hidden")
   }
+  console.log(grid)
 }
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
   let coords = event.target.id;
   console.log("Clicked " + coords);
-  grid[coords.split(",")[0]][[coords.split(",")[1]]] = 1;
+  grid[coords.split(",")[0]][[coords.split(",")[1]]].hidden = false;
   render();
 }
 
 function gridRightClickHandler(event) {
   let coords = event.target.id;
   console.log("Right clicked " + coords);
-  grid[coords.split(",")[0]][[coords.split(",")[1]]] = 2;
+  grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
   event.preventDefault();
   render();
 }
@@ -311,17 +331,42 @@ function getRandomNumber(max, min) {
 function render() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-      if (square === 1) {
+      if (square.hidden === false) {
         divEl = document.getElementById(rowNumber + "," + columnNumber);
         divEl.classList.remove("hidden");
         let pEl = divEl.querySelector("p");
         if (pEl) {
         pEl.classList.remove("hidden");
         }
-      } else if (square === 2) {
+      } else if (square.flagged === true) {
         divEl = document.getElementById(rowNumber + "," + columnNumber);
         divEl.style.backgroundColor = "blue";
       }
     });
   });
 }
+
+
+// function flood(square) {
+//   if (square.classList.contains("mine")) {
+//     return
+//   } 
+//   if (square.classList.contains("central")) {
+//      square.classList.remove("hidden")
+//      square.querySelector("p").classList.remove("hidden")
+//    }
+//   }
+//   else {
+//     //unhide
+//     flood(next square)
+//   }
+
+//   if central:
+//   unhide; 
+//   look at upper left: 
+//     if not mine, reveal
+//     if not Number, flood
+//   look at upper middle
+//     if not mine, reveal
+//     if not n flood
+
