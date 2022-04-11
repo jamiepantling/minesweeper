@@ -98,19 +98,19 @@ function init() {
           let surroundingSquares = 0;
           if (grid[rowNumber - 1][columnNumber - 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber - 1][columnNumber] === "m") {
+          } if (grid[rowNumber - 1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber - 1][columnNumber + 1] === "m") {
+          } if (grid[rowNumber - 1][columnNumber + 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber][columnNumber - 1] === "m") {
+          } if (grid[rowNumber][columnNumber - 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber][columnNumber + 1] === "m") {
+          } if (grid[rowNumber][columnNumber + 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber + 1][columnNumber - 1] === "m") {
+          } if (grid[rowNumber + 1][columnNumber - 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber + 1][columnNumber] === "m") {
+          } if (grid[rowNumber + 1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          } if (grid[rowNumber + 1][columnNumber + 1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
@@ -120,9 +120,9 @@ function init() {
           let surroundingSquares = 0;
           if (grid[rowNumber][columnNumber + 1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber + 1][columnNumber] === "m") {
+          } if (grid[rowNumber + 1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber + 1][columnNumber + 1] === "m") {
+          } if (grid[rowNumber + 1][columnNumber + 1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
@@ -132,9 +132,9 @@ function init() {
           let surroundingSquares = 0;
           if (grid[rowNumber][columnNumber-1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber+1][columnNumber] === "m") {
+          } if (grid[rowNumber+1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber+1][columnNumber-1] === "m") {
+          } if (grid[rowNumber+1][columnNumber-1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
@@ -144,9 +144,9 @@ function init() {
           let surroundingSquares = 0;
           if (grid[rowNumber-1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber-1][columnNumber+1] === "m") {
+          } if (grid[rowNumber-1][columnNumber+1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber][columnNumber+1] === "m") {
+          } if (grid[rowNumber][columnNumber+1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
@@ -156,9 +156,9 @@ function init() {
           let surroundingSquares = 0;
           if (grid[rowNumber-1][columnNumber] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber-1][columnNumber-1] === "m") {
+          } if (grid[rowNumber-1][columnNumber-1] === "m") {
             surroundingSquares++;
-          } else if (grid[rowNumber][columnNumber-1] === "m") {
+          } if (grid[rowNumber][columnNumber-1] === "m") {
             surroundingSquares++;
           }
           divEl = document.getElementById(`${rowNumber},${columnNumber}`);
