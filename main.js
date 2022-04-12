@@ -2,8 +2,7 @@
 let grid = [];
 let mineCounter = 0;
 let flagCounter = 0;
-let sec = 0;
-let firstClick;
+let begun;
 let finished;
 let finalTime = 0;
 
@@ -30,11 +29,11 @@ document.getElementById("reset").addEventListener("click", init);
 //renders new grid to doc
 
 function init() {
-  firstClick = false
-  finished = false
-  flagCounter = 0
-  mineCounter = 0
-  sec = 0
+  document.getElementById("reset").innerHTML = '<img src="img/smiley.png">';
+  begun = false;
+  finished = false;
+  flagCounter = 0;
+  mineCounter = 0;
   grid = [];
   for (let i = 0; i < 12; i++) {
     let arr = [];
@@ -77,7 +76,7 @@ function init() {
 
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 12; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
@@ -311,7 +310,7 @@ function init() {
   });
 
   //Adds hidden class to all divs in DOM-grid and all p elements
-  let divs = document.querySelectorAll("div");
+  let divs = document.querySelectorAll(".square");
   for (let div of divs) {
     div.classList.add("hidden");
   }
@@ -321,16 +320,12 @@ function init() {
   }
   console.log(grid);
   console.log(mineCounter);
-  
-  render()
+
+  render();
 }
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
-  if(!firstClick) {
-    timer()
-    firstClick = true
-  }
   let coords = "";
   if (event.target.tagName === "P") {
     let parentEl = event.target.parentNode;
@@ -349,8 +344,14 @@ function gridClickHandler(event) {
       grid.forEach(function (row, rowNumber) {
         row.forEach(function (square, columnNumber) {
           square.hidden = false;
+          if (square.mine) {
+            square.sprout = true;
+          
+          }
+        
         });
       });
+      document.getElementById("reset").innerHTML = '<img src="img/vomit.png">'
     }
     if (grid[x][y].surround === 0) {
       flood(x, y);
@@ -360,36 +361,31 @@ function gridClickHandler(event) {
 }
 
 function gridRightClickHandler(event) {
-  if(!firstClick) {
-    timer()
-    firstClick = true
-  }
-  let coords = event.target.id;
+    let coords = event.target.id;
   console.log("Right clicked " + coords);
   event.preventDefault();
   if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
     grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
     flagCounter++;
     if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter++
+      mineCounter++;
     }
   } else {
     grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
     flagCounter--;
     if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter--
+      mineCounter--;
     }
     if (!mineCounter) {
-      console.log("YOU WIN")
-      finalTime = sec;
-      finished = true
-      
+      console.log("YOU WIN");
+
       grid.forEach(function (row) {
         row.forEach(function (square) {
-          if(!square.mine) {square.hidden = false;
-        }
+          if (!square.mine) {
+            square.hidden = false;
+          }
+        });
       });
-      })
     }
   }
   render();
@@ -399,6 +395,11 @@ function gridRightClickHandler(event) {
 function getRandomNumber(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+
+
+
+
 
 // renders grid from array data
 function render() {
@@ -411,34 +412,72 @@ function render() {
         pEl.classList.remove("hidden");
       } else if (square.flagged) {
         divEl.classList.add("flagged");
+        divEl.innerHTML = '<p><img src="img/radioactive.png"></p>';
       } else if (!square.flagged) {
         divEl.classList.remove("flagged");
+        }
+      if (square.sprout) {
+        divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
       }
     });
   });
-  let flagEl = document.getElementById("flag-count")
-  flagEl.innerHTML = flagCounter
-  let timeEl = document.getElementById("timer")
-  if (!finished) {
-  timeEl.innerHTML = sec
-  } else if (finished) {
-    timeEl.innerHTML = finalTime
+  let flagEl = document.getElementById("flag-count");
+  flagEl.innerHTML = flagCounter;
   }
-}
 
 
-function timer() {
-  function startTimer(cb) {
-    setTimeout(cb, 1000);
-  }
-  function increaseTimer() {
-    if (!finished) {sec++
-    render()
-    startTimer(increaseTimer)
-    }
-  }
-increaseTimer()
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function flood(a, b) {
