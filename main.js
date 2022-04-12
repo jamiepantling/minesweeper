@@ -24,13 +24,13 @@ document.getElementById("reset").addEventListener("click", init);
 //renders new grid to doc
 
 function init() {
-  grid = []
-  for(let i=0; i<12; i++) {
+  grid = [];
+  for (let i = 0; i < 12; i++) {
     let arr = [];
-    for (let i=0; i<12; i++) {
+    for (let i = 0; i < 12; i++) {
       arr.push({});
     }
-    grid.push(arr)
+    grid.push(arr);
   }
 
   // removes squares from doc
@@ -80,7 +80,7 @@ function init() {
   // add grid array mines to class of equivalent div elements in DOM
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
-      if (square.mine === true) {
+      if (square.mine) {
         divEl = document.getElementById(`${rowNumber},${columnNumber}`);
         divEl.classList.add("mine");
       }
@@ -101,31 +101,31 @@ function init() {
         columnNumber !== 11
       ) {
         grid[rowNumber][columnNumber].location = "central";
-        if (!square.mine === true) {
+        if (!square.mine) {
           // Where the square is not an edge or corner
           let surroundingSquares = 0;
-          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -133,15 +133,15 @@ function init() {
       } else if (rowNumber === 0 && columnNumber === 0) {
         //Top left corner
         grid[rowNumber][columnNumber].location = "top-left";
-        if (!square.mine === true) {
+        if (!square.mine) {
           let surroundingSquares = 0;
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -150,14 +150,14 @@ function init() {
         //Top right corner
         grid[rowNumber][columnNumber].location = "top-right";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -165,15 +165,15 @@ function init() {
       } else if (rowNumber === 11 && columnNumber === 0) {
         //Bottom left corner
         grid[rowNumber][columnNumber].location = "bottom-left";
-        if (!square.mine === true) {
+        if (!square.mine) {
           let surroundingSquares = 0;
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].suround = surroundingSquares;
@@ -182,14 +182,14 @@ function init() {
         //Bottom right corner
         grid[rowNumber][columnNumber].location = "bottom-right";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -198,20 +198,20 @@ function init() {
         // Top row,  not corners
         grid[rowNumber][columnNumber].location = "top-row";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -220,20 +220,20 @@ function init() {
         // Bottom row,  not corners
         grid[rowNumber][columnNumber].location = "bottom-row";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
         }
@@ -242,20 +242,20 @@ function init() {
         // Left column,  not corners
         grid[rowNumber][columnNumber].location = "left-column";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber - 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber + 1].mine === true) {
+          if (grid[rowNumber][columnNumber + 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber + 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber + 1].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -264,20 +264,20 @@ function init() {
         // Right column,  not corners
         grid[rowNumber][columnNumber].location = "right-column";
         let surroundingSquares = 0;
-        if (!square.mine === true) {
-          if (grid[rowNumber - 1][columnNumber - 1].mine === true) {
+        if (!square.mine) {
+          if (grid[rowNumber - 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber - 1][columnNumber].mine === true) {
+          if (grid[rowNumber - 1][columnNumber].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber][columnNumber - 1].mine === true) {
+          if (grid[rowNumber][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber - 1].mine === true) {
+          if (grid[rowNumber + 1][columnNumber - 1].mine) {
             surroundingSquares++;
           }
-          if (grid[rowNumber + 1][columnNumber].mine === true) {
+          if (grid[rowNumber + 1][columnNumber].mine) {
             surroundingSquares++;
           }
           grid[rowNumber][columnNumber].surround = surroundingSquares;
@@ -311,19 +311,23 @@ function init() {
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
-  let coords = ""
+  let coords = "";
   if (event.target.tagName === "P") {
-     let parentEl = event.target.parentNode
-     coords = parentEl.id
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
   } else {
-   coords = event.target.id;
+    coords = event.target.id;
   }
   console.log("Clicked " + coords);
   let x = parseInt(coords.split(",")[0]);
   let y = parseInt(coords.split(",")[1]);
   grid[x][y].hidden = false;
-  if (grid[x][y].mine === true) {
-    console.log("MINE");
+  if (grid[x][y].mine) {
+    grid.forEach(function (row, rowNumber) {
+      row.forEach(function (square, columnNumber) {
+        square.hidden = false;
+      });
+    });
   }
   if (grid[x][y].surround === 0) {
     flood(x, y);
@@ -340,7 +344,7 @@ function gridRightClickHandler(event) {
 }
 
 // random number generator
-function getRandomNumber (max, min) {
+function getRandomNumber(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -350,10 +354,10 @@ function render() {
     row.forEach(function (square, columnNumber) {
       divEl = document.getElementById(rowNumber + "," + columnNumber);
       pEl = divEl.querySelector("p");
-      if (square.hidden === false) {
+      if (!square.hidden) {
         divEl.classList.remove("hidden");
         pEl.classList.remove("hidden");
-      } else if (square.flagged === true) {
+      } else if (square.flagged) {
         divEl.style.backgroundColor = "blue";
       }
     });
@@ -361,70 +365,324 @@ function render() {
 }
 
 function flood(a, b) {
-  
-  if (grid[a - 1][b - 1] &&
-    grid[a - 1][b] &&
-    grid[a - 1][b + 1] &&
-    grid[a][b - 1] &&
-    grid[a][b + 1] &&
-    grid[a + 1][b - 1] &&
-    grid[a + 1][b] &&
-    grid[a + 1][b + 1]) {
-  if ((grid[a - 1][b - 1].edge === false &&
-    grid[a - 1][b].edge === false &&
-    grid[a - 1][b + 1].edge === false &&
-    grid[a][b - 1].edge === false &&
-    grid[a][b + 1].edge === false &&
-    grid[a + 1][b - 1].edge === false &&
-    grid[a + 1][b].edge === false &&
-    grid[a + 1][b + 1].edge === false)) {
-  if ((grid[a - 1][b - 1].hidden === false &&
-    grid[a - 1][b].hidden === false &&
-    grid[a - 1][b + 1].hidden === false &&
-    grid[a][b - 1].hidden === false &&
-    grid[a][b + 1].hidden === false &&
-    grid[a + 1][b - 1].hidden === false &&
-    grid[a + 1][b].hidden === false &&
-    grid[a + 1][b + 1].hidden === false) ||
-    (grid[a - 1][b - 1].surround > 0 &&
-    grid[a - 1][b].surround > 0 &&
-    grid[a - 1][b + 1].surround > 0 &&
-    grid[a][b - 1].surround > 0 &&
-    grid[a][b + 1].surround > 0 &&
-    grid[a + 1][b - 1].surround > 0 &&
-    grid[a + 1][b].surround > 0 &&
-    grid[a + 1][b + 1].surround > 0)) {
-      grid[a][b].hidden = false
-      return
+  //central squares
+  if (grid[a][b].location === "central") {
+    if (
+      (!grid[a - 1][b - 1].hidden &&
+        !grid[a - 1][b].hidden &&
+        !grid[a - 1][b + 1].hidden &&
+        !grid[a][b - 1].hidden &&
+        !grid[a][b + 1].hidden &&
+        !grid[a + 1][b - 1].hidden &&
+        !grid[a + 1][b].hidden &&
+        !grid[a + 1][b + 1].hidden) ||
+      (grid[a - 1][b - 1].surround > 0 &&
+        grid[a - 1][b].surround > 0 &&
+        grid[a - 1][b + 1].surround > 0 &&
+        grid[a][b - 1].surround > 0 &&
+        grid[a][b + 1].surround > 0 &&
+        grid[a + 1][b - 1].surround > 0 &&
+        grid[a + 1][b].surround > 0 &&
+        grid[a + 1][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
     }
-    
-      let surroundArray = [
-        [a-1, b-1], 
-        [a-1, b], 
-        [a-1, b+1], 
-        [a, b-1],
-        [a, b+1],
-        [a+1, b-1],
-        [a+1, b],
-        [a+1, b+1]];
-      
-        for (let pair of surroundArray) {
-          
-            if (grid[pair[0]][pair[1]].edge === true || grid[pair[0]][pair[1]].checked === true) {
-              continue
-            }
-            grid[pair[0]][pair[1]].checked = true;
-            if (grid[pair[0]][pair[1]].surround === 0) {
-            flood(pair[0],pair[1]);
-            }
-            grid[pair[0]][pair[1]].hidden = false;
-             
-        };
-}
-}
-return
-}
 
+    let surroundArray = [
+      [a - 1, b - 1],
+      [a - 1, b],
+      [a - 1, b + 1],
+      [a, b - 1],
+      [a, b + 1],
+      [a + 1, b - 1],
+      [a + 1, b],
+      [a + 1, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+    //top-row squares
+  } else if (grid[a][b].location === "top-row") {
+    if (
+      (!grid[a][b - 1].hidden &&
+        !grid[a][b + 1].hidden &&
+        !grid[a + 1][b - 1].hidden &&
+        !grid[a + 1][b].hidden &&
+        !grid[a + 1][b + 1].hidden) ||
+      (grid[a][b - 1].surround > 0 &&
+        grid[a][b + 1].surround > 0 &&
+        grid[a + 1][b - 1].surround > 0 &&
+        grid[a + 1][b].surround > 0 &&
+        grid[a + 1][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a, b - 1],
+      [a, b + 1],
+      [a + 1, b - 1],
+      [a + 1, b],
+      [a + 1, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+  } else if (grid[a][b].location === "left-column") {
+    if (
+      (!grid[a - 1][b].hidden &&
+        !grid[a - 1][b + 1].hidden &&
+        !grid[a][b + 1].hidden &&
+        !grid[a + 1][b].hidden &&
+        !grid[a + 1][b + 1].hidden) ||
+      (grid[a - 1][b].surround > 0 &&
+        grid[a - 1][b + 1].surround > 0 &&
+        grid[a][b + 1].surround > 0 &&
+        grid[a + 1][b].surround > 0 &&
+        grid[a + 1][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a - 1, b],
+      [a - 1, b + 1],
+      [a, b + 1],
+      [a + 1, b],
+      [a + 1, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "bottom-row") {
+    if (
+      (!grid[a - 1][b - 1].hidden &&
+        !grid[a - 1][b].hidden &&
+        !grid[a - 1][b + 1].hidden &&
+        !grid[a][b - 1].hidden &&
+        !grid[a][b + 1].hidden) ||
+      (grid[a - 1][b - 1].surround > 0 &&
+        grid[a - 1][b].surround > 0 &&
+        grid[a - 1][b + 1].surround > 0 &&
+        grid[a][b - 1].surround > 0 &&
+        grid[a][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a - 1, b - 1],
+      [a - 1, b],
+      [a - 1, b + 1],
+      [a, b - 1],
+      [a, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "right-column") {
+    if (
+      (!grid[a - 1][b - 1].hidden &&
+        !grid[a - 1][b].hidden &&
+        !grid[a][b - 1].hidden &&
+        !grid[a + 1][b - 1].hidden &&
+        !grid[a + 1][b].hidden) ||
+      (grid[a - 1][b - 1].surround > 0 &&
+        grid[a - 1][b].surround > 0 &&
+        grid[a][b - 1].surround > 0 &&
+        grid[a + 1][b - 1].surround > 0 &&
+        grid[a + 1][b].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a - 1, b - 1],
+      [a - 1, b],
+      [a, b - 1],
+      [a + 1, b - 1],
+      [a + 1, b],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "top-left") {
+    if (
+      (!grid[a][b + 1].hidden &&
+        !grid[a + 1][b].hidden &&
+        !grid[a + 1][b + 1].hidden) ||
+      (grid[a][b + 1].surround > 0 &&
+        grid[a + 1][b].surround > 0 &&
+        grid[a + 1][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a, b + 1],
+      [a + 1, b],
+      [a + 1, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "top-right") {
+    if (
+      (!grid[a][b - 1].hidden &&
+        !grid[a + 1][b - 1].hidden &&
+        !grid[a + 1][b].hidden) ||
+      (grid[a][b - 1].surround > 0 &&
+        grid[a + 1][b - 1].surround > 0 &&
+        grid[a + 1][b].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a, b - 1],
+      [a + 1, b - 1],
+      [a + 1, b],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "bottom-left") {
+    if (
+      (!grid[a - 1][b].hidden &&
+        !grid[a - 1][b + 1].hidden &&
+        !grid[a][b + 1].hidden) ||
+      (grid[a - 1][b].surround > 0 &&
+        grid[a - 1][b + 1].surround > 0 &&
+        grid[a][b + 1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a - 1, b],
+      [a - 1, b + 1],
+      [a, b + 1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  } else if (grid[a][b].location === "bottom-right") {
+    if (
+      (!grid[a-1][b - 1].hidden &&
+        !grid[a -1][b].hidden &&
+        !grid[a][b-1].hidden) ||
+      (grid[a-1][b-1].surround > 0 &&
+        grid[a - 1][b].surround > 0 &&
+        grid[a][b-1].surround > 0)
+    ) {
+      grid[a][b].hidden = false;
+      return;
+    }
+
+    let surroundArray = [
+      [a-1, b-1],
+      [a - 1, b],
+      [a, b-1],
+    ];
+
+    for (let pair of surroundArray) {
+      if (grid[pair[0]][pair[1]].checked) {
+        continue;
+      }
+      grid[pair[0]][pair[1]].checked = true;
+      if (grid[pair[0]][pair[1]].surround === 0) {
+        flood(pair[0], pair[1]);
+      }
+      grid[pair[0]][pair[1]].hidden = false;
+    }
+
+    return;
+  }
+}
 // grid[a - 1][b - 1].hidden = false;
 //   grid[a - 1][b].hidden = false;
 //   grid[a - 1][b + 1].hidden = false;
@@ -435,74 +693,73 @@ return
 //   grid[a + 1][b + 1].hidden = false;
 // }
 
-  // if (grid[a][b].surround > 0 || grid[a][b].mine === true || grid[a][b] === undefined) {
-  //   return
-  // } else
-  // if (grid[a - 1][b - 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a - 1][b - 1].hidden = false;
-  //   if (grid[a - 1][b - 1].surround === 0) {
-  //     flood(a - 1, b - 1);
-  //   }
-  // }
-  // if (grid[a - 1][b] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a - 1][b].hidden = false;
-  //   if (grid[a - 1][b].surround === 0) {
-  //     flood(a - 1, b);
-  //   }
-  // }
-  // if (grid[a - 1][b + 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a - 1][b + 1].hidden = false;
-  //   if (grid[a - 1][b + 1].surround === 0) {
-  //     flood(a - 1, b + 1);
-  //   }
-  // }
-  // if (grid[a][b - 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a][b - 1].hidden = false;
-  //   if (grid[a][b - 1].surround === 0) {
-  //     flood(a, b - 1);
-  //   }
-  // }
-  // if (grid[a][b + 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a][b + 1].hidden = false;
-  //   if (grid[a][b + 1].surround === 0) {
-  //     flood(a, b + 1);
-  //   }
-  // }
-  // if (grid[a + 1][b - 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a + 1][b - 1].hidden = false;
-  //   if (grid[a + 1][b - 1].surround === 0) {
-  //     flood(a + 1, b - 1);
-  //   }
-  // }
-  // if (grid[a + 1][b] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a + 1][b].hidden = false;
-  //   if (grid[a + 1][b].surround === 0) {
-  //     flood(a + 1, b);
-  //   }
-  // }
-  // if (grid[a + 1][b + 1] === undefined) {
-  //   return;
-  // } else {
-  //   grid[a + 1][b + 1].hidden = false;
-  //   if (grid[a + 1][b + 1].surround === 0) {
-  //     flood(a + 1, b + 1);
-  //   }
-  // }
-
+// if (grid[a][b].surround > 0 || grid[a][b].mine || grid[a][b] === undefined) {
+//   return
+// } else
+// if (grid[a - 1][b - 1] === undefined) {
+//   return;
+// } else {
+//   grid[a - 1][b - 1].hidden = false;
+//   if (grid[a - 1][b - 1].surround === 0) {
+//     flood(a - 1, b - 1);
+//   }
+// }
+// if (grid[a - 1][b] === undefined) {
+//   return;
+// } else {
+//   grid[a - 1][b].hidden = false;
+//   if (grid[a - 1][b].surround === 0) {
+//     flood(a - 1, b);
+//   }
+// }
+// if (grid[a - 1][b + 1] === undefined) {
+//   return;
+// } else {
+//   grid[a - 1][b + 1].hidden = false;
+//   if (grid[a - 1][b + 1].surround === 0) {
+//     flood(a - 1, b + 1);
+//   }
+// }
+// if (grid[a][b - 1] === undefined) {
+//   return;
+// } else {
+//   grid[a][b - 1].hidden = false;
+//   if (grid[a][b - 1].surround === 0) {
+//     flood(a, b - 1);
+//   }
+// }
+// if (grid[a][b + 1] === undefined) {
+//   return;
+// } else {
+//   grid[a][b + 1].hidden = false;
+//   if (grid[a][b + 1].surround === 0) {
+//     flood(a, b + 1);
+//   }
+// }
+// if (grid[a + 1][b - 1] === undefined) {
+//   return;
+// } else {
+//   grid[a + 1][b - 1].hidden = false;
+//   if (grid[a + 1][b - 1].surround === 0) {
+//     flood(a + 1, b - 1);
+//   }
+// }
+// if (grid[a + 1][b] === undefined) {
+//   return;
+// } else {
+//   grid[a + 1][b].hidden = false;
+//   if (grid[a + 1][b].surround === 0) {
+//     flood(a + 1, b);
+//   }
+// }
+// if (grid[a + 1][b + 1] === undefined) {
+//   return;
+// } else {
+//   grid[a + 1][b + 1].hidden = false;
+//   if (grid[a + 1][b + 1].surround === 0) {
+//     flood(a + 1, b + 1);
+//   }
+// }
 
 // if (grid[a][b+1]) {
 //   if (grid[a][b+1].surround === 0) {
