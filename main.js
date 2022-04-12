@@ -1,5 +1,11 @@
 // ** Variables **
 let grid = [];
+let mineCounter = 0;
+let flagCounter = 0;
+let sec = 0;
+let firstClick;
+let finished;
+let finalTime = 0;
 
 // **Initialising function call**
 
@@ -24,6 +30,11 @@ document.getElementById("reset").addEventListener("click", init);
 //renders new grid to doc
 
 function init() {
+  firstClick = false
+  finished = false
+  flagCounter = 0
+  mineCounter = 0
+  sec = 0
   grid = [];
   for (let i = 0; i < 12; i++) {
     let arr = [];
@@ -66,7 +77,7 @@ function init() {
 
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 1; i <= 40; i++) {
+  for (let i = 1; i <= 10; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
@@ -81,6 +92,8 @@ function init() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       if (square.mine) {
+        mineCounter++;
+        flagCounter = mineCounter;
         divEl = document.getElementById(`${rowNumber},${columnNumber}`);
         divEl.classList.add("mine");
       }
@@ -307,10 +320,17 @@ function init() {
     p.classList.add("hidden");
   }
   console.log(grid);
+  console.log(mineCounter);
+  
+  render()
 }
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
+  if(!firstClick) {
+    timer()
+    firstClick = true
+  }
   let coords = "";
   if (event.target.tagName === "P") {
     let parentEl = event.target.parentNode;
@@ -321,25 +341,57 @@ function gridClickHandler(event) {
   console.log("Clicked " + coords);
   let x = parseInt(coords.split(",")[0]);
   let y = parseInt(coords.split(",")[1]);
-  grid[x][y].hidden = false;
-  if (grid[x][y].mine) {
-    grid.forEach(function (row, rowNumber) {
-      row.forEach(function (square, columnNumber) {
-        square.hidden = false;
+  if (grid[x][y].flagged) {
+    return;
+  } else {
+    grid[x][y].hidden = false;
+    if (grid[x][y].mine) {
+      grid.forEach(function (row, rowNumber) {
+        row.forEach(function (square, columnNumber) {
+          square.hidden = false;
+        });
       });
-    });
-  }
-  if (grid[x][y].surround === 0) {
-    flood(x, y);
+    }
+    if (grid[x][y].surround === 0) {
+      flood(x, y);
+    }
   }
   render();
 }
 
 function gridRightClickHandler(event) {
+  if(!firstClick) {
+    timer()
+    firstClick = true
+  }
   let coords = event.target.id;
   console.log("Right clicked " + coords);
-  grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
   event.preventDefault();
+  if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
+    flagCounter++;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter++
+    }
+  } else {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
+    flagCounter--;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter--
+    }
+    if (!mineCounter) {
+      console.log("YOU WIN")
+      finalTime = sec;
+      finished = true
+      
+      grid.forEach(function (row) {
+        row.forEach(function (square) {
+          if(!square.mine) {square.hidden = false;
+        }
+      });
+      })
+    }
+  }
   render();
 }
 
@@ -358,11 +410,36 @@ function render() {
         divEl.classList.remove("hidden");
         pEl.classList.remove("hidden");
       } else if (square.flagged) {
-        divEl.style.backgroundColor = "blue";
+        divEl.classList.add("flagged");
+      } else if (!square.flagged) {
+        divEl.classList.remove("flagged");
       }
     });
   });
+  let flagEl = document.getElementById("flag-count")
+  flagEl.innerHTML = flagCounter
+  let timeEl = document.getElementById("timer")
+  if (!finished) {
+  timeEl.innerHTML = sec
+  } else if (finished) {
+    timeEl.innerHTML = finalTime
+  }
 }
+
+
+function timer() {
+  function startTimer(cb) {
+    setTimeout(cb, 1000);
+  }
+  function increaseTimer() {
+    if (!finished) {sec++
+    render()
+    startTimer(increaseTimer)
+    }
+  }
+increaseTimer()
+}
+
 
 function flood(a, b) {
   //central squares
@@ -652,21 +729,21 @@ function flood(a, b) {
     return;
   } else if (grid[a][b].location === "bottom-right") {
     if (
-      (!grid[a-1][b - 1].hidden &&
-        !grid[a -1][b].hidden &&
-        !grid[a][b-1].hidden) ||
-      (grid[a-1][b-1].surround > 0 &&
+      (!grid[a - 1][b - 1].hidden &&
+        !grid[a - 1][b].hidden &&
+        !grid[a][b - 1].hidden) ||
+      (grid[a - 1][b - 1].surround > 0 &&
         grid[a - 1][b].surround > 0 &&
-        grid[a][b-1].surround > 0)
+        grid[a][b - 1].surround > 0)
     ) {
       grid[a][b].hidden = false;
       return;
     }
 
     let surroundArray = [
-      [a-1, b-1],
+      [a - 1, b - 1],
       [a - 1, b],
-      [a, b-1],
+      [a, b - 1],
     ];
 
     for (let pair of surroundArray) {
@@ -683,117 +760,3 @@ function flood(a, b) {
     return;
   }
 }
-// grid[a - 1][b - 1].hidden = false;
-//   grid[a - 1][b].hidden = false;
-//   grid[a - 1][b + 1].hidden = false;
-//   grid[a][b - 1].hidden = false;
-//   grid[a][b + 1].hidden = false;
-//   grid[a + 1][b - 1].hidden = false;
-//   grid[a + 1][b].hidden = false;
-//   grid[a + 1][b + 1].hidden = false;
-// }
-
-// if (grid[a][b].surround > 0 || grid[a][b].mine || grid[a][b] === undefined) {
-//   return
-// } else
-// if (grid[a - 1][b - 1] === undefined) {
-//   return;
-// } else {
-//   grid[a - 1][b - 1].hidden = false;
-//   if (grid[a - 1][b - 1].surround === 0) {
-//     flood(a - 1, b - 1);
-//   }
-// }
-// if (grid[a - 1][b] === undefined) {
-//   return;
-// } else {
-//   grid[a - 1][b].hidden = false;
-//   if (grid[a - 1][b].surround === 0) {
-//     flood(a - 1, b);
-//   }
-// }
-// if (grid[a - 1][b + 1] === undefined) {
-//   return;
-// } else {
-//   grid[a - 1][b + 1].hidden = false;
-//   if (grid[a - 1][b + 1].surround === 0) {
-//     flood(a - 1, b + 1);
-//   }
-// }
-// if (grid[a][b - 1] === undefined) {
-//   return;
-// } else {
-//   grid[a][b - 1].hidden = false;
-//   if (grid[a][b - 1].surround === 0) {
-//     flood(a, b - 1);
-//   }
-// }
-// if (grid[a][b + 1] === undefined) {
-//   return;
-// } else {
-//   grid[a][b + 1].hidden = false;
-//   if (grid[a][b + 1].surround === 0) {
-//     flood(a, b + 1);
-//   }
-// }
-// if (grid[a + 1][b - 1] === undefined) {
-//   return;
-// } else {
-//   grid[a + 1][b - 1].hidden = false;
-//   if (grid[a + 1][b - 1].surround === 0) {
-//     flood(a + 1, b - 1);
-//   }
-// }
-// if (grid[a + 1][b] === undefined) {
-//   return;
-// } else {
-//   grid[a + 1][b].hidden = false;
-//   if (grid[a + 1][b].surround === 0) {
-//     flood(a + 1, b);
-//   }
-// }
-// if (grid[a + 1][b + 1] === undefined) {
-//   return;
-// } else {
-//   grid[a + 1][b + 1].hidden = false;
-//   if (grid[a + 1][b + 1].surround === 0) {
-//     flood(a + 1, b + 1);
-//   }
-// }
-
-// if (grid[a][b+1]) {
-//   if (grid[a][b+1].surround === 0) {
-//     flood(a, b+1);
-//   }
-// }
-// if (grid[a+1][b-1]) {
-//   if (grid[a+1][b-1].surround === 0) {
-//     flood(a+1, b-1);
-//   }
-// }
-// if (grid[a+1][b]) {
-//   if (grid[a+1][b].surround === 0) {
-//     flood(a+1, b);
-//   }
-// }
-// if (grid[a+1][b+1]) {
-//   if (grid[a+1][b+1].surround === 0) {
-//     flood(a+1, b=1);
-//   }
-//
-
-//   // if central:
-//   // unhide;
-// look at upper left:
-//   if not mine, reveal
-//   if not Number, flood
-// look at upper middle
-//   if not mine, reveal
-//   if not n flood
-
-// if clicked square is not marked, open all surrounding
-// if any newly opened are not marked, open all surrounding of them
-
-// if any surround squares are mines, open just that square
-// else open all surrounding
-// move to upper left
