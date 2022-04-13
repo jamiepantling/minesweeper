@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Vujahday+Script&display=swap');
 
 :root {
-    --pink: #d1439e;
+    --pink: #e94baf;
     --yellow: #f8e924;
     --green: #2cad23;
     --purple: #54276f;
     --orange: rgb(243, 136, 22);
-    --blue: #1DA5BE;
+    --blue: #30bdd6;
     --darkblue: #131C5A;
   }
   
@@ -52,10 +52,11 @@ h1 {
     font-size: 100px;
     font-weight: bold;
     background-color: var(--pink);
-    color: var(--darkblue);
+    color: var(--blue);
     height: 120px;
     width: 140px;
     margin: auto auto;
+    border-radius: 10px;
 }
 
 #grid-container {
@@ -74,14 +75,17 @@ h1 {
     width: 25px; */
     border-right: 1px solid black;
     border-bottom: 1px solid black;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
     font-weight: bold;
     font-size: 25px;
     border-radius: 5px;
     margin: 1px;
     background-color: var(--darkblue);
+}
+.square > * {
+    grid-column-start: 1;
+    grid-row-start: 2;
+    text-align: center;
 }
 /* Marker text colors */
 .surround-1 {
@@ -130,9 +134,13 @@ img {
 }
 .square img {
     width: 23px;
+    margin: -10px 0 0 0;
 }
 p {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.flag {
+    display: inline;
 }

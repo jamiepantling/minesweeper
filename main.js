@@ -77,7 +77,7 @@ function init() {
 
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 0; i <= 39; i++) {
+  for (let i = 0; i <= 11; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
@@ -434,7 +434,7 @@ function render() {
         if (!divEl.classList.contains("flagged")) {
           divEl.classList.add("flagged")
           let flagPEl = document.createElement("p")
-          flagPEl.innerHTML = '<img src="img/radioactive.png">'
+          flagPEl.innerHTML = '☠️'
           flagPEl.classList.add("flag")
           divEl.appendChild(flagPEl)
         }
@@ -535,10 +535,11 @@ function flood(a, b) {
         grid[a + 1][b].surround > 0 &&
         grid[a + 1][b + 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
     }
-
+  }
     let surroundArray = [
       [a - 1, b - 1],
       [a - 1, b],
@@ -558,7 +559,12 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (grid[pair[0]][pair[1]].flagged) {
+        console.log("I'M FLAGGED!")
+      }
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
     //top-row squares
   } else if (grid[a][b].location === "top-row") {
@@ -574,8 +580,10 @@ function flood(a, b) {
         grid[a + 1][b].surround > 0 &&
         grid[a + 1][b + 1].surround > 0)
     ) {
+      if (!grid[a][b].flagged) {
       grid[a][b].hidden = false;
       return;
+      }
     }
 
     let surroundArray = [
@@ -594,7 +602,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
   } else if (grid[a][b].location === "left-column") {
     if (
@@ -609,8 +619,10 @@ function flood(a, b) {
         grid[a + 1][b].surround > 0 &&
         grid[a + 1][b + 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -629,7 +641,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -646,8 +660,10 @@ function flood(a, b) {
         grid[a][b - 1].surround > 0 &&
         grid[a][b + 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -666,7 +682,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -683,8 +701,10 @@ function flood(a, b) {
         grid[a + 1][b - 1].surround > 0 &&
         grid[a + 1][b].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -703,7 +723,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -716,8 +738,10 @@ function flood(a, b) {
         grid[a + 1][b].surround > 0 &&
         grid[a + 1][b + 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -734,7 +758,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -747,8 +773,10 @@ function flood(a, b) {
         grid[a + 1][b - 1].surround > 0 &&
         grid[a + 1][b].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -765,7 +793,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -778,8 +808,10 @@ function flood(a, b) {
         grid[a - 1][b + 1].surround > 0 &&
         grid[a][b + 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -796,7 +828,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
@@ -809,8 +843,10 @@ function flood(a, b) {
         grid[a - 1][b].surround > 0 &&
         grid[a][b - 1].surround > 0)
     ) {
-      grid[a][b].hidden = false;
-      return;
+      if (!grid[a][b].flagged) {
+        grid[a][b].hidden = false;
+        return;
+    }
     }
 
     let surroundArray = [
@@ -827,7 +863,9 @@ function flood(a, b) {
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
       }
-      grid[pair[0]][pair[1]].hidden = false;
+      if (!grid[pair[0]][pair[1]].flagged) {
+        grid[pair[0]][pair[1]].hidden = false;
+      }
     }
 
     return;
