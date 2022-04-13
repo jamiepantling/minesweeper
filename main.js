@@ -6,6 +6,7 @@ let begun;
 let finished;
 let finalTime = 0;
 let interval = -1;
+let sec = 0
 
 // **Initialising function call**
 
@@ -30,6 +31,9 @@ document.getElementById("reset").addEventListener("click", init);
 //renders new grid to doc
 
 function init() {
+  stopTimer()
+  interval = -1
+  sec = 0
   document.getElementById("reset").innerHTML = '<p>🤨</p>';
   begun = false;
   finished = false;
@@ -328,6 +332,8 @@ function init() {
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
+  if (interval === -1)
+    {interval = setInterval(timer, 1000)}
   let coords = "";
   if (event.target.tagName === "IMG") {
     let imgParent = event.target.parentNode
@@ -359,6 +365,7 @@ function gridClickHandler(event) {
         });
       });
       document.getElementById("reset").innerHTML = '🤮'
+      stopTimer()
     }
     if (grid[x][y].surround === 0) {
       flood(x, y);
@@ -398,6 +405,7 @@ function gridRightClickHandler(event) {
     if (!mineCounter && flagCounter === 0) {
       console.log("YOU WIN");
       document.getElementById("reset").innerHTML = '😋'
+      stopTimer()
       grid.forEach(function (row) {
         row.forEach(function (square) {
           if (!square.mine) {
@@ -422,6 +430,7 @@ function getRandomNumber(max, min) {
 
 // renders grid from array data
 function render() {
+  document.getElementById("timer").innerHTML = sec;
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       divEl = document.getElementById(rowNumber + "," + columnNumber);
@@ -461,7 +470,14 @@ function render() {
 
 
 
+function timer() {
+sec++
+render()
+}
 
+function stopTimer() {
+  clearInterval(interval);
+}
 
 
 
