@@ -37,7 +37,7 @@ But if you accidentally click on a sprout - you lose.
 
 ## Getting Started
 
-Go ahead and [play *Sproutsweeper!*](https://jamiepantling.github.io/minesweeper/) 
+Go ahead and [play *Sproutsweeper!*](https://jamiepantling.github.io/sproutsweeper/) 
 
 ### Instructions
 
