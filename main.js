@@ -25,13 +25,14 @@ document.getElementById("reset").addEventListener("click", reset);
 
 // ** Functions **
 
-//initialising function
+// Initialise game
 
 function init() {
   interval = -1;
   sec = 0;
   flagCounter = 0;
   mineCounter = 0;
+  uniqueMineCoords = []
 
   initialiseGrid();
   removeSquares();
@@ -44,7 +45,7 @@ function init() {
   render();
 }
 
-//resets game
+// Reset game
 
 function reset() {
   stopTimer();
@@ -52,7 +53,7 @@ function reset() {
   init();
 }
 
-//initialises empty array of arrays of objects to make the grid
+// Initialise empty array of arrays of objects to make the grid
 
 function initialiseGrid() {
   grid = [];
@@ -65,7 +66,7 @@ function initialiseGrid() {
   }
 }
 
-// Removes "square" divs from grid-container in DOM
+// Remove "square" divs from grid-container in DOM
 
 function removeSquares() {
   let divEl = document.querySelectorAll(".square");
@@ -74,7 +75,7 @@ function removeSquares() {
   }
 }
 
-// sets up objects, puts new squares in doc
+// Set up objects, puts new squares in doc
 
 function initialiseObjects() {
   grid.forEach(function (row, rowNumber) {
