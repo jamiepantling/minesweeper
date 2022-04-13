@@ -81,7 +81,7 @@ function init() {
 
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 0; i <= 11; i++) {
+  for (let i = 0; i <= 39; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
