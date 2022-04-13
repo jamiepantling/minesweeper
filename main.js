@@ -332,6 +332,9 @@ function init() {
 // click handlers get coords from click and
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
+  if (event.target.id === "grid-container") {
+    return
+  }
   if (interval === -1)
     {interval = setInterval(timer, 1000)}
   let coords = "";
@@ -375,7 +378,10 @@ function gridClickHandler(event) {
 }
 
 function gridRightClickHandler(event) {
-  
+  if (event.target.id === "grid-container") {
+    event.preventDefault();
+    return
+  }
   let coords = "";
   if (event.target.tagName === "IMG") {
     let pParent = event.target.parentNode
