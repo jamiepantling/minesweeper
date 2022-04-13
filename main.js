@@ -5,9 +5,9 @@ let flagCounter = 0;
 let interval = -1;
 let sec = 0;
 let mineNumber = 20;
-let uniqueMineCoords = []
+let uniqueMineCoords = [];
 
-// **Initialising function call**
+// ** Initialising function call **
 
 init();
 
@@ -23,7 +23,7 @@ document
 
 document.getElementById("reset").addEventListener("click", reset);
 
-// **Functions**
+// ** Functions **
 
 //initialising function
 
@@ -103,14 +103,13 @@ function initialiseObjects() {
 // Place mines in grid
 
 function placeMinesInGrid() {
-  
   if (uniqueMineCoords.length === mineNumber) {
     uniqueMineCoords.forEach(function (coordPair) {
       grid[coordPair[0]][coordPair[1]].mine = true;
     });
-    return
+    return;
   }
-  uniqueMineCoords = []
+  uniqueMineCoords = [];
   let mineCoords = [];
   let randomNums = [];
   for (let i = 0; i <= 2 * mineNumber - 1; i++) {
@@ -121,24 +120,24 @@ function placeMinesInGrid() {
     mineCoords.push([randomNums[i], randomNums[i + 1]]);
   }
   let mineCoordsStrings = [];
-  mineCoords.forEach(function(mineCoord) {
+  mineCoords.forEach(function (mineCoord) {
     mineCoordsStrings.push(`${mineCoord[0]}, ${mineCoord[1]}`);
-  })
+  });
   let mineCoordsStringsSet = new Set(mineCoordsStrings);
-  
+
   let uniqueMineCoordsStrings = [...mineCoordsStringsSet];
-  
-  uniqueMineCoordsStrings.forEach(function(mineCoordString) {
+
+  uniqueMineCoordsStrings.forEach(function (mineCoordString) {
     uniqueMineCoords.push([
-        [parseInt(mineCoordString.split(",")[0])],
-        [parseInt(mineCoordString.split(",")[1])]
-      ])
-      
-    })
-    placeMinesInGrid()
+      [parseInt(mineCoordString.split(",")[0])],
+      [parseInt(mineCoordString.split(",")[1])],
+    ]);
+  });
+  placeMinesInGrid();
 }
 
 // Add grid array mines to class of equivalent div elements in DOM
+
 function deployMinesToSquares() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
@@ -351,6 +350,7 @@ function surround() {
 }
 
 // Sets squares in DOM to show if they surround a mine
+
 function deploySurrounders() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
@@ -365,6 +365,7 @@ function deploySurrounders() {
 }
 
 //Adds hidden class to all divs in DOM-grid and all p elements
+
 function hidePs() {
   let divs = document.querySelectorAll(".square");
   for (let div of divs) {
@@ -373,7 +374,8 @@ function hidePs() {
   }
 }
 
-// renders grid from array data
+// Renders grid from array data
+
 function render() {
   document.getElementById("timer").innerHTML = sec;
   grid.forEach(function (row, rowNumber) {
@@ -412,18 +414,20 @@ function render() {
 }
 
 // Make timer count up
+
 function timer() {
   sec++;
   render();
 }
 
 // Stop timer
+
 function stopTimer() {
   clearInterval(interval);
 }
 
-// click handlers get coords from click and
-// set grid to 1 for left click, 2 for right click
+// Left-click handler
+
 function gridClickHandler(event) {
   if (event.target.id === "grid-container") {
     return;
@@ -466,6 +470,8 @@ function gridClickHandler(event) {
   }
   render();
 }
+
+// Right-click handler
 
 function gridRightClickHandler(event) {
   if (event.target.id === "grid-container") {
@@ -511,14 +517,15 @@ function gridRightClickHandler(event) {
   render();
 }
 
-// random number generator
+// Random number generator
+
 function getRandomNumber(max, min) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // Floods grid with recursive revealing of squares if clear of mines
+
 function flood(a, b) {
-  //central squares
   if (grid[a][b].location === "central") {
     if (
       (!grid[a - 1][b - 1].hidden &&
@@ -566,7 +573,6 @@ function flood(a, b) {
         grid[pair[0]][pair[1]].hidden = false;
       }
     }
-    //top-row squares
   } else if (grid[a][b].location === "top-row") {
     if (
       (!grid[a][b - 1].hidden &&

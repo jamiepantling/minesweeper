@@ -1,179 +1,189 @@
-@import url('https://fonts.googleapis.com/css2?family=Vujahday+Script&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Vujahday+Script&display=swap");
 
 :root {
-    --pink: #e94baf;
-    --yellow: #f8e924;
-    --green: #2cad23;
-    --purple: #54276f;
-    --orange: rgb(243, 136, 22);
-    --blue: #30bdd6;
-    --darkblue: #131C5A;
-  }
-  
+  --pink: #e94baf;
+  --yellow: #f8e924;
+  --green: #2cad23;
+  --purple: #54276f;
+  --orange: rgb(243, 136, 22);
+  --blue: #30bdd6;
+  --darkblue: #131c5a;
+}
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
 body {
-    height: 100vh;
-    background-color: var(--green);
-    font-family: 'Vujahday Script', cursive;
+  height: 100vh;
+  background-color: var(--green);
+  font-family: "Vujahday Script", cursive;
 }
+
 header {
-    height: 150px;
-    text-align: center;
+  height: 150px;
+  text-align: center;
 }
+
 h1 {
-    padding: 20px;
-    font-size: 80px;
-    color: var(--darkblue);
+  padding: 20px;
+  font-size: 80px;
+  color: var(--darkblue);
 }
+
 h2 {
-    text-align: center;
+  text-align: center;
 }
+
 #main {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
 }
 
 #instructions-container {
-    grid-column-start: 1;
-    display: flex;
-    justify-content: center;
+  grid-column-start: 1;
+  display: flex;
+  justify-content: center;
 }
 
 #instructions {
-    padding: 110px 0 0 40px;
-    text-align: left;
-    font-size: 25px;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    color: var(--darkblue)
+  padding: 110px 0 0 40px;
+  text-align: left;
+  font-size: 25px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  color: var(--darkblue);
 }
+
+ul {
+  margin-left: 40px;
+  list-style: none;
+  width: 100%;
+}
+
+li {
+  background: url("img/sprout-bullet.png") no-repeat left center;
+  margin: 15px 0 0 0;
+  padding-left: 40px;
+}
+
 #board {
-    height: 700px;
-    width: 700px;
-    margin: auto auto;
-    border-radius: 10px;
-    grid-column-start: 2;
+  height: 700px;
+  width: 700px;
+  margin: auto auto;
+  border-radius: 10px;
+  grid-column-start: 2;
 }
+
 #board-header {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    background-color: var(--green);
-    border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  background-color: var(--green);
+  border-radius: 10px;
 }
+
 .btn-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 80px;
-    font-weight: bold;
-    background-color: var(--darkblue);
-    color: var(--pink);
-    height: 110px;
-    width: 140px;
-    margin: auto auto;
-    border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80px;
+  font-weight: bold;
+  background-color: var(--darkblue);
+  color: var(--pink);
+  height: 110px;
+  width: 140px;
+  margin: auto auto;
+  border-radius: 10px;
 }
+
 #reset {
-    background-color: var(--darkblue);
-    padding: 10px 0 0 0 ;
-    font-size: 100px;
-    width: 110px;
-    height: 110px
+  background-color: var(--darkblue);
+  padding: 10px 0 0 0;
+  font-size: 100px;
+  width: 110px;
+  height: 110px;
 }
 
 #grid-container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-    height: 600px;
-    width: 600px;
-    margin: 10px auto 0 auto;
-    font-family: courier;
-    border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  height: 600px;
+  width: 600px;
+  margin: 10px auto 0 auto;
+  font-family: courier;
+  border-radius: 5px;
+}
 
-    }
 .square {
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
-    display: grid;
-    font-weight: bold;
-    font-size: 30px;
-    border-radius: 5px;
-    margin: 1px;
-    background-color: var(--darkblue);
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+  display: grid;
+  font-weight: bold;
+  font-size: 30px;
+  border-radius: 5px;
+  margin: 1px;
+  background-color: var(--darkblue);
 }
+
 .square > * {
-    grid-column-start: 1;
-    grid-row-start: 2;
-    text-align: center;
+  grid-column-start: 1;
+  grid-row-start: 2;
+  text-align: center;
 }
+
 /* Marker text colors */
 .surround-1 {
-    color: var(--yellow);
+  color: var(--yellow);
 }
 .surround-2 {
-    color: var(--blue);
+  color: var(--blue);
 }
 .surround-3 {
-    color: var(--pink)
+  color: var(--pink);
 }
 .surround-4 {
-    color: var(--green);
+  color: var(--green);
 }
 .surround-5 {
-    color: brown;
+  color: brown;
 }
 .surround-6 {
-    color: cyan;
+  color: cyan;
 }
 .surround-7 {
-    color: var(--orange);
+  color: var(--orange);
 }
 .surround-8 {
-    color: grey;
+  color: grey;
 }
 
 #grid-container .hidden {
-    border-left: 2px white solid;
-    border-top: 2px white solid;
-    border-right: 2px darkgrey solid;
-    border-bottom: 2px darkgrey solid;
-    background-color: var(--pink);
+  border-left: 2px white solid;
+  border-top: 2px white solid;
+  border-right: 2px darkgrey solid;
+  border-bottom: 2px darkgrey solid;
+  background-color: var(--pink);
 }
+
 p.hidden {
-    visibility: hidden;
+  visibility: hidden;
 }
-
-
 
 img {
-    width: 100px;
+  width: 100px;
 }
+
 .square img {
-    width: 45px;
-    margin: -10px 0 0 0;
+  width: 45px;
+  margin: -10px 0 0 0;
 }
+
 p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.flag {
-    display: inline;
-}
-ul {
-    margin-left: 40px;
-    list-style: none;
-    width: 100%;
-}
-li {
-    background: url("img/sprout-bullet.png") no-repeat left center;
-    margin: 15px 0 0 0;
-    padding-left: 40px;
-     }
