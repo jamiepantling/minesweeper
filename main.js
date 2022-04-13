@@ -5,6 +5,7 @@ let flagCounter = 0;
 let begun;
 let finished;
 let finalTime = 0;
+let interval = -1;
 
 // **Initialising function call**
 
@@ -98,10 +99,10 @@ function init() {
       }
     });
   });
-  let mineEl = document.querySelectorAll(".mine");
-  for (let mine of mineEl) {
-    mine.innerHTML = "<p>✪</p>";
-  }
+  // let mineEl = document.querySelectorAll(".mine");
+  // for (let mine of mineEl) {
+  //   mine.innerHTML = "<p>✪</p>";
+  // }
   // place numbers around mines in grid array
 
   grid.forEach(function (row, rowNumber) {
@@ -328,7 +329,11 @@ function init() {
 // set grid to 1 for left click, 2 for right click
 function gridClickHandler(event) {
   let coords = "";
-  if (event.target.tagName === "P") {
+  if (event.target.tagName === "IMG") {
+    let imgParent = event.target.parentNode
+    let sqParent = imgParent.parentNode
+    coords = sqParent.id
+  } else if (event.target.tagName === "P") {
     let parentEl = event.target.parentNode;
     coords = parentEl.id;
   } else {
@@ -340,6 +345,7 @@ function gridClickHandler(event) {
   if (grid[x][y].flagged) {
     return;
   } else {
+    console.log(x + y)
     grid[x][y].hidden = false;
     if (grid[x][y].mine) {
       grid.forEach(function (row, rowNumber) {
@@ -362,7 +368,18 @@ function gridClickHandler(event) {
 }
 
 function gridRightClickHandler(event) {
-    let coords = event.target.id;
+  
+  let coords = "";
+  if (event.target.tagName === "IMG") {
+    let pParent = event.target.parentNode
+    let sqParent = pParent.parentNode
+    coords = sqParent.id
+  } else if (event.target.tagName === "P") {
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
+  } else {
+    coords = event.target.id;
+  }
   console.log("Right clicked " + coords);
   event.preventDefault();
   if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
@@ -371,7 +388,8 @@ function gridRightClickHandler(event) {
     if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
       mineCounter++;
     }
-  } else {
+  } 
+  else {
     grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
     flagCounter--;
     if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
@@ -410,13 +428,28 @@ function render() {
       pEl = divEl.querySelector("p");
       if (!square.hidden) {
         divEl.classList.remove("hidden");
+        
         pEl.classList.remove("hidden");
       } else if (square.flagged) {
-        divEl.classList.add("flagged");
-        divEl.innerHTML = '<p><img src="img/radioactive.png"></p>';
+        if (!divEl.classList.contains("flagged")) {
+          divEl.classList.add("flagged")
+          let flagPEl = document.createElement("p")
+          flagPEl.innerHTML = '<img src="img/radioactive.png">'
+          flagPEl.classList.add("flag")
+          divEl.appendChild(flagPEl)
+        }
       } else if (!square.flagged) {
         divEl.classList.remove("flagged");
+        if (divEl.lastChild.classList.contains("flag")) {
+          divEl.removeChild(divEl.lastChild)
         }
+        if (square.surround) {
+          pEl.innerHTML = `${square.surround}`;
+          pEl.classList.add(`surround-${square.surround}`);
+          
+          
+        }
+      }
       if (square.sprout) {
         divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
       }
