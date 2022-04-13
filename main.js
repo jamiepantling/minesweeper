@@ -4,6 +4,8 @@ let mineCounter = 0;
 let flagCounter = 0;
 let interval = -1;
 let sec = 0;
+let mineNumber = 3;
+let uniqueMineCoords = []
 
 // **Initialising function call**
 
@@ -19,19 +21,15 @@ document
   .getElementById("grid-container")
   .addEventListener("contextmenu", gridRightClickHandler);
 
-document.getElementById("reset").addEventListener("click", init);
+document.getElementById("reset").addEventListener("click", reset);
 
 // **Functions**
 
 //initialising function
 
 function init() {
-  stopTimer();
   interval = -1;
   sec = 0;
-  document.getElementById("reset").innerHTML = "<p>🤨</p>";
-  begun = false;
-  finished = false;
   flagCounter = 0;
   mineCounter = 0;
 
@@ -46,6 +44,14 @@ function init() {
   render();
 }
 
+//resets game
+
+function reset() {
+  stopTimer();
+  document.getElementById("reset").innerHTML = "<p>🤨</p>";
+  init();
+}
+
 //initialises empty array of arrays of objects to make the grid
 
 function initialiseGrid() {
@@ -57,151 +63,6 @@ function initialiseGrid() {
     }
     grid.push(arr);
   }
-}
-
-// click handlers get coords from click and
-// set grid to 1 for left click, 2 for right click
-function gridClickHandler(event) {
-  if (event.target.id === "grid-container") {
-    return;
-  }
-  if (interval === -1) {
-    interval = setInterval(timer, 1000);
-  }
-  let coords = "";
-  if (event.target.tagName === "IMG") {
-    let imgParent = event.target.parentNode;
-    let sqParent = imgParent.parentNode;
-    coords = sqParent.id;
-  } else if (event.target.tagName === "P") {
-    let parentEl = event.target.parentNode;
-    coords = parentEl.id;
-  } else {
-    coords = event.target.id;
-  }
-  console.log("Clicked " + coords);
-  let x = parseInt(coords.split(",")[0]);
-  let y = parseInt(coords.split(",")[1]);
-  if (grid[x][y].flagged) {
-    return;
-  } else {
-    console.log(x + y);
-    grid[x][y].hidden = false;
-    if (grid[x][y].mine) {
-      grid.forEach(function (row, rowNumber) {
-        row.forEach(function (square, columnNumber) {
-          square.hidden = false;
-          if (square.mine) {
-            square.sprout = true;
-          }
-        });
-      });
-      document.getElementById("reset").innerHTML = "🤮";
-      stopTimer();
-    }
-    if (grid[x][y].surround === 0) {
-      flood(x, y);
-    }
-  }
-  render();
-}
-
-function gridRightClickHandler(event) {
-  if (event.target.id === "grid-container") {
-    event.preventDefault();
-    return;
-  }
-  let coords = "";
-  if (event.target.tagName === "IMG") {
-    let pParent = event.target.parentNode;
-    let sqParent = pParent.parentNode;
-    coords = sqParent.id;
-  } else if (event.target.tagName === "P") {
-    let parentEl = event.target.parentNode;
-    coords = parentEl.id;
-  } else {
-    coords = event.target.id;
-  }
-  console.log("Right clicked " + coords);
-  event.preventDefault();
-  if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
-    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
-    flagCounter++;
-    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter++;
-    }
-  } else {
-    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
-    flagCounter--;
-    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter--;
-    }
-    if (!mineCounter && flagCounter === 0) {
-      console.log("YOU WIN");
-      document.getElementById("reset").innerHTML = "😋";
-      stopTimer();
-      grid.forEach(function (row) {
-        row.forEach(function (square) {
-          if (!square.mine) {
-            square.hidden = false;
-          }
-        });
-      });
-    }
-  }
-  render();
-}
-
-// random number generator
-function getRandomNumber(max, min) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-// renders grid from array data
-function render() {
-  document.getElementById("timer").innerHTML = sec;
-  grid.forEach(function (row, rowNumber) {
-    row.forEach(function (square, columnNumber) {
-      divEl = document.getElementById(rowNumber + "," + columnNumber);
-      pEl = divEl.querySelector("p");
-      if (!square.hidden) {
-        divEl.classList.remove("hidden");
-
-        pEl.classList.remove("hidden");
-      } else if (square.flagged) {
-        if (!divEl.classList.contains("flagged")) {
-          divEl.classList.add("flagged");
-          let flagPEl = document.createElement("p");
-          flagPEl.innerHTML = "☠️";
-          flagPEl.classList.add("flag");
-          divEl.appendChild(flagPEl);
-        }
-      } else if (!square.flagged) {
-        divEl.classList.remove("flagged");
-        if (divEl.lastChild.classList.contains("flag")) {
-          divEl.removeChild(divEl.lastChild);
-        }
-        if (square.surround) {
-          pEl.innerHTML = `${square.surround}`;
-          pEl.classList.add(`surround-${square.surround}`);
-        }
-      }
-      if (square.sprout) {
-        divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
-      }
-    });
-  });
-  let flagEl = document.getElementById("flag-count");
-  flagEl.innerHTML = flagCounter;
-}
-
-function timer() {
-  sec++;
-  render();
-}
-
-function stopTimer() {
-  clearInterval(interval);
 }
 
 // Removes "square" divs from grid-container in DOM
@@ -239,24 +100,45 @@ function initialiseObjects() {
   });
 }
 
-// Places mines in grid
+// Place mines in grid
 
 function placeMinesInGrid() {
+  
+  if (uniqueMineCoords.length === mineNumber) {
+    uniqueMineCoords.forEach(function (coordPair) {
+      grid[coordPair[0]][coordPair[1]].mine = true;
+    });
+    return
+  }
+  uniqueMineCoords = []
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 0; i <= 39; i++) {
+  for (let i = 0; i <= 2 * mineNumber - 1; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
   for (let i = 0; i < randomNums.length; i = i + 2) {
     mineCoords.push([randomNums[i], randomNums[i + 1]]);
   }
-  mineCoords.forEach(function (coordPair) {
-    grid[coordPair[0]][coordPair[1]].mine = true;
-  });
+  let mineCoordsStrings = [];
+  mineCoords.forEach(function(mineCoord) {
+    mineCoordsStrings.push(`${mineCoord[0]}, ${mineCoord[1]}`);
+  })
+  let mineCoordsStringsSet = new Set(mineCoordsStrings);
+  
+  let uniqueMineCoordsStrings = [...mineCoordsStringsSet];
+  
+  uniqueMineCoordsStrings.forEach(function(mineCoordString) {
+    uniqueMineCoords.push([
+        [parseInt(mineCoordString.split(",")[0])],
+        [parseInt(mineCoordString.split(",")[1])]
+      ])
+      
+    })
+    placeMinesInGrid()
 }
 
-// add grid array mines to class of equivalent div elements in DOM
+// Add grid array mines to class of equivalent div elements in DOM
 function deployMinesToSquares() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
@@ -270,7 +152,7 @@ function deployMinesToSquares() {
   });
 }
 
-// Adds property with numbers to grid objects that surround mines
+// Add property with numbers to grid objects that surround mines
 
 function surround() {
   grid.forEach(function (row, rowNumber) {
@@ -491,6 +373,149 @@ function hidePs() {
   }
 }
 
+// renders grid from array data
+function render() {
+  document.getElementById("timer").innerHTML = sec;
+  grid.forEach(function (row, rowNumber) {
+    row.forEach(function (square, columnNumber) {
+      divEl = document.getElementById(rowNumber + "," + columnNumber);
+      pEl = divEl.querySelector("p");
+      if (!square.hidden) {
+        divEl.classList.remove("hidden");
+
+        pEl.classList.remove("hidden");
+      } else if (square.flagged) {
+        if (!divEl.classList.contains("flagged")) {
+          divEl.classList.add("flagged");
+          let flagPEl = document.createElement("p");
+          flagPEl.innerHTML = "☠️";
+          flagPEl.classList.add("flag");
+          divEl.appendChild(flagPEl);
+        }
+      } else if (!square.flagged) {
+        divEl.classList.remove("flagged");
+        if (divEl.lastChild.classList.contains("flag")) {
+          divEl.removeChild(divEl.lastChild);
+        }
+        if (square.surround) {
+          pEl.innerHTML = `${square.surround}`;
+          pEl.classList.add(`surround-${square.surround}`);
+        }
+      }
+      if (square.sprout) {
+        divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
+      }
+    });
+  });
+  let flagEl = document.getElementById("flag-count");
+  flagEl.innerHTML = flagCounter;
+}
+
+// Make timer count up
+function timer() {
+  sec++;
+  render();
+}
+
+// Stop timer
+function stopTimer() {
+  clearInterval(interval);
+}
+
+// click handlers get coords from click and
+// set grid to 1 for left click, 2 for right click
+function gridClickHandler(event) {
+  if (event.target.id === "grid-container") {
+    return;
+  }
+  if (interval === -1) {
+    interval = setInterval(timer, 1000);
+  }
+  let coords = "";
+  if (event.target.tagName === "IMG") {
+    let imgParent = event.target.parentNode;
+    let sqParent = imgParent.parentNode;
+    coords = sqParent.id;
+  } else if (event.target.tagName === "P") {
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
+  } else {
+    coords = event.target.id;
+  }
+  let x = parseInt(coords.split(",")[0]);
+  let y = parseInt(coords.split(",")[1]);
+  if (grid[x][y].flagged) {
+    return;
+  } else {
+    grid[x][y].hidden = false;
+    if (grid[x][y].mine) {
+      grid.forEach(function (row, rowNumber) {
+        row.forEach(function (square, columnNumber) {
+          square.hidden = false;
+          if (square.mine) {
+            square.sprout = true;
+          }
+        });
+      });
+      document.getElementById("reset").innerHTML = "🤮";
+      stopTimer();
+    }
+    if (grid[x][y].surround === 0) {
+      flood(x, y);
+    }
+  }
+  render();
+}
+
+function gridRightClickHandler(event) {
+  if (event.target.id === "grid-container") {
+    event.preventDefault();
+    return;
+  }
+  let coords = "";
+  if (event.target.tagName === "IMG") {
+    let pParent = event.target.parentNode;
+    let sqParent = pParent.parentNode;
+    coords = sqParent.id;
+  } else if (event.target.tagName === "P") {
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
+  } else {
+    coords = event.target.id;
+  }
+  event.preventDefault();
+  if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
+    flagCounter++;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter++;
+    }
+  } else {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
+    flagCounter--;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter--;
+    }
+    if (!mineCounter && flagCounter === 0) {
+      document.getElementById("reset").innerHTML = "😋";
+      stopTimer();
+      grid.forEach(function (row) {
+        row.forEach(function (square) {
+          if (!square.mine) {
+            square.hidden = false;
+          }
+        });
+      });
+    }
+  }
+  render();
+}
+
+// random number generator
+function getRandomNumber(max, min) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 // Floods grid with recursive revealing of squares if clear of mines
 function flood(a, b) {
   //central squares
@@ -536,9 +561,6 @@ function flood(a, b) {
       grid[pair[0]][pair[1]].checked = true;
       if (grid[pair[0]][pair[1]].surround === 0) {
         flood(pair[0], pair[1]);
-      }
-      if (grid[pair[0]][pair[1]].flagged) {
-        console.log("I'M FLAGGED!");
       }
       if (!grid[pair[0]][pair[1]].flagged) {
         grid[pair[0]][pair[1]].hidden = false;
