@@ -4,7 +4,7 @@ let mineCounter = 0;
 let flagCounter = 0;
 let interval = -1;
 let sec = 0;
-let mineNumber = 3;
+let mineNumber = 20;
 let uniqueMineCoords = []
 
 // **Initialising function call**
