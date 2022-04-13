@@ -22,27 +22,48 @@ body {
     font-family: 'Vujahday Script', cursive;
 }
 header {
-    height: 200px;
+    height: 150px;
     text-align: center;
 }
 h1 {
     padding: 20px;
-    font-size: 100px;
-    color: var(--darkblue)
+    font-size: 80px;
+    color: var(--darkblue);
+}
+h2 {
+    text-align: center;
+}
+#main {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
 }
 
+#instructions-container {
+    grid-column-start: 1;
+    display: flex;
+    justify-content: center;
+}
+
+#instructions {
+    padding: 110px 0 0 40px;
+    text-align: left;
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: var(--darkblue)
+}
 #board {
-    height: 500px;
-    width: 480px;
+    height: 700px;
+    width: 700px;
     margin: auto auto;
     border-radius: 10px;
+    grid-column-start: 2;
 }
 #board-header {
-    display: grid;
+    display: flex;
+    justify-content: space-around;
     width: 100%;
-    height: 140px;
-    background-color: var(--purple);
-    grid-template-columns: 1fr 1fr 1fr;
+    background-color: var(--green);
     border-radius: 10px;
 }
 .btn-container {
@@ -51,33 +72,38 @@ h1 {
     align-items: center;
     font-size: 80px;
     font-weight: bold;
-    background-color: var(--pink);
-    color: var(--blue);
-    height: 120px;
+    background-color: var(--darkblue);
+    color: var(--pink);
+    height: 110px;
     width: 140px;
     margin: auto auto;
     border-radius: 10px;
+}
+#reset {
+    background-color: var(--darkblue);
+    padding: 10px 0 0 0 ;
+    font-size: 100px;
+    width: 110px;
+    height: 110px
 }
 
 #grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
-    height: 480px;
-    width: 480px;
-    margin: 50px auto 0 auto;
+    height: 600px;
+    width: 600px;
+    margin: 10px auto 0 auto;
     font-family: courier;
     border-radius: 5px;
 
     }
 .square {
-    /* height: 25px;
-    width: 25px; */
     border-right: 1px solid black;
     border-bottom: 1px solid black;
     display: grid;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
     border-radius: 5px;
     margin: 1px;
     background-color: var(--darkblue);
@@ -92,13 +118,13 @@ h1 {
     color: var(--yellow);
 }
 .surround-2 {
-    color: var(--green);
+    color: var(--blue);
 }
 .surround-3 {
-    color: var(--orange)
+    color: var(--pink)
 }
 .surround-4 {
-    color: var(--blue);
+    color: var(--green);
 }
 .surround-5 {
     color: brown;
@@ -107,7 +133,7 @@ h1 {
     color: cyan;
 }
 .surround-7 {
-    color: var(--pink);
+    color: var(--orange);
 }
 .surround-8 {
     color: grey;
@@ -118,26 +144,19 @@ h1 {
     border-top: 2px white solid;
     border-right: 2px darkgrey solid;
     border-bottom: 2px darkgrey solid;
-    background-color: var(--orange);
+    background-color: var(--pink);
 }
 p.hidden {
     visibility: hidden;
 }
 
-#reset {
-    background-color: var(--purple);
-    padding: 17px 0 0 0 ;
-    font-size: 100px;
-}
-button {
-    width: 110px;
-}
+
 
 img {
     width: 100px;
 }
 .square img {
-    width: 23px;
+    width: 45px;
     margin: -10px 0 0 0;
 }
 p {
@@ -148,3 +167,13 @@ p {
 .flag {
     display: inline;
 }
+ul {
+    margin-left: 40px;
+    list-style: none;
+    width: 100%;
+}
+li {
+    background: url("img/sprout-bullet.png") no-repeat left center;
+    margin: 15px 0 0 0;
+    padding-left: 40px;
+     }

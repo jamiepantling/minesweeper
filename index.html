@@ -10,15 +10,30 @@
   </head>
   <body>
     <header><h1>Sproutsweeper!</h1></header>
+    <div id="main">
+      <div id="instructions-container">
+        <div id="instructions"><h2>
+
+        instructions:</h2>
+        <ul>
+          <li>There are Brussels sprouts all over the grid!</li>
+          <li>Find them all to stop your dinner being ruined.</li>
+          <li>Click a square to reveal it.</li>
+          <li>If it's a Brussels sprout, you lose! Ugh!</li>
+          <li>If it's next to a sprout, it will tell you how many sprouts surround it.</li>
+          <li>Right-click to flag a sprout.</li>
+          <li>Flag them all and you win!</li>
+        </ul>
+        </div>
+      </div>
       <div id="board">
         <div id="board-header">
           <div class="btn-container" id="flag-count"></div>
           <button class="btn-container" id="reset">🤨</button>
           <div class="btn-container" id="timer"></div>
         </div>
-        <div id="grid-container">
-        </div>
-      
+        <div id="grid-container"></div>
+      </div>
     </div>
   </body>
 </html>
