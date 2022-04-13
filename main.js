@@ -29,7 +29,7 @@ document.getElementById("reset").addEventListener("click", init);
 //renders new grid to doc
 
 function init() {
-  document.getElementById("reset").innerHTML = '<img src="img/smiley.png">';
+  document.getElementById("reset").innerHTML = '<p>🤨</p>';
   begun = false;
   finished = false;
   flagCounter = 0;
@@ -76,7 +76,7 @@ function init() {
 
   let mineCoords = [];
   let randomNums = [];
-  for (let i = 1; i <= 12; i++) {
+  for (let i = 0; i <= 39; i++) {
     let num = getRandomNumber(11, 0);
     randomNums.push(num);
   }
@@ -313,11 +313,12 @@ function init() {
   let divs = document.querySelectorAll(".square");
   for (let div of divs) {
     div.classList.add("hidden");
+    div.querySelector("p").classList.add("hidden");
   }
-  let ps = document.querySelectorAll("p");
-  for (let p of ps) {
-    p.classList.add("hidden");
-  }
+  // let ps = document.querySelectorAll("p");
+  // for (let p of ps) {
+  //   p.classList.add("hidden");
+  // }
   console.log(grid);
   console.log(mineCounter);
 
@@ -351,7 +352,7 @@ function gridClickHandler(event) {
         
         });
       });
-      document.getElementById("reset").innerHTML = '<img src="img/vomit.png">'
+      document.getElementById("reset").innerHTML = '🤮'
     }
     if (grid[x][y].surround === 0) {
       flood(x, y);
@@ -376,9 +377,9 @@ function gridRightClickHandler(event) {
     if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
       mineCounter--;
     }
-    if (!mineCounter) {
+    if (!mineCounter && flagCounter === 0) {
       console.log("YOU WIN");
-
+      document.getElementById("reset").innerHTML = '😋'
       grid.forEach(function (row) {
         row.forEach(function (square) {
           if (!square.mine) {
