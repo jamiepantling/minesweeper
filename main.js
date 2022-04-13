@@ -2,11 +2,8 @@
 let grid = [];
 let mineCounter = 0;
 let flagCounter = 0;
-let begun;
-let finished;
-let finalTime = 0;
 let interval = -1;
-let sec = 0
+let sec = 0;
 
 // **Initialising function call**
 
@@ -26,19 +23,32 @@ document.getElementById("reset").addEventListener("click", init);
 
 // **Functions**
 
-//initialising function - sets grid array up,
-//removes previous square divs from doc,
-//renders new grid to doc
+//initialising function
 
 function init() {
-  stopTimer()
-  interval = -1
-  sec = 0
-  document.getElementById("reset").innerHTML = '<p>🤨</p>';
+  stopTimer();
+  interval = -1;
+  sec = 0;
+  document.getElementById("reset").innerHTML = "<p>🤨</p>";
   begun = false;
   finished = false;
   flagCounter = 0;
   mineCounter = 0;
+
+  initialiseGrid();
+  removeSquares();
+  initialiseObjects();
+  placeMinesInGrid();
+  deployMinesToSquares();
+  surround();
+  deploySurrounders();
+  hidePs();
+  render();
+}
+
+//initialises empty array of arrays of objects to make the grid
+
+function initialiseGrid() {
   grid = [];
   for (let i = 0; i < 12; i++) {
     let arr = [];
@@ -47,14 +57,165 @@ function init() {
     }
     grid.push(arr);
   }
+}
 
-  // removes squares from doc
+// click handlers get coords from click and
+// set grid to 1 for left click, 2 for right click
+function gridClickHandler(event) {
+  if (event.target.id === "grid-container") {
+    return;
+  }
+  if (interval === -1) {
+    interval = setInterval(timer, 1000);
+  }
+  let coords = "";
+  if (event.target.tagName === "IMG") {
+    let imgParent = event.target.parentNode;
+    let sqParent = imgParent.parentNode;
+    coords = sqParent.id;
+  } else if (event.target.tagName === "P") {
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
+  } else {
+    coords = event.target.id;
+  }
+  console.log("Clicked " + coords);
+  let x = parseInt(coords.split(",")[0]);
+  let y = parseInt(coords.split(",")[1]);
+  if (grid[x][y].flagged) {
+    return;
+  } else {
+    console.log(x + y);
+    grid[x][y].hidden = false;
+    if (grid[x][y].mine) {
+      grid.forEach(function (row, rowNumber) {
+        row.forEach(function (square, columnNumber) {
+          square.hidden = false;
+          if (square.mine) {
+            square.sprout = true;
+          }
+        });
+      });
+      document.getElementById("reset").innerHTML = "🤮";
+      stopTimer();
+    }
+    if (grid[x][y].surround === 0) {
+      flood(x, y);
+    }
+  }
+  render();
+}
+
+function gridRightClickHandler(event) {
+  if (event.target.id === "grid-container") {
+    event.preventDefault();
+    return;
+  }
+  let coords = "";
+  if (event.target.tagName === "IMG") {
+    let pParent = event.target.parentNode;
+    let sqParent = pParent.parentNode;
+    coords = sqParent.id;
+  } else if (event.target.tagName === "P") {
+    let parentEl = event.target.parentNode;
+    coords = parentEl.id;
+  } else {
+    coords = event.target.id;
+  }
+  console.log("Right clicked " + coords);
+  event.preventDefault();
+  if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
+    flagCounter++;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter++;
+    }
+  } else {
+    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
+    flagCounter--;
+    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
+      mineCounter--;
+    }
+    if (!mineCounter && flagCounter === 0) {
+      console.log("YOU WIN");
+      document.getElementById("reset").innerHTML = "😋";
+      stopTimer();
+      grid.forEach(function (row) {
+        row.forEach(function (square) {
+          if (!square.mine) {
+            square.hidden = false;
+          }
+        });
+      });
+    }
+  }
+  render();
+}
+
+// random number generator
+function getRandomNumber(max, min) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+// renders grid from array data
+function render() {
+  document.getElementById("timer").innerHTML = sec;
+  grid.forEach(function (row, rowNumber) {
+    row.forEach(function (square, columnNumber) {
+      divEl = document.getElementById(rowNumber + "," + columnNumber);
+      pEl = divEl.querySelector("p");
+      if (!square.hidden) {
+        divEl.classList.remove("hidden");
+
+        pEl.classList.remove("hidden");
+      } else if (square.flagged) {
+        if (!divEl.classList.contains("flagged")) {
+          divEl.classList.add("flagged");
+          let flagPEl = document.createElement("p");
+          flagPEl.innerHTML = "☠️";
+          flagPEl.classList.add("flag");
+          divEl.appendChild(flagPEl);
+        }
+      } else if (!square.flagged) {
+        divEl.classList.remove("flagged");
+        if (divEl.lastChild.classList.contains("flag")) {
+          divEl.removeChild(divEl.lastChild);
+        }
+        if (square.surround) {
+          pEl.innerHTML = `${square.surround}`;
+          pEl.classList.add(`surround-${square.surround}`);
+        }
+      }
+      if (square.sprout) {
+        divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
+      }
+    });
+  });
+  let flagEl = document.getElementById("flag-count");
+  flagEl.innerHTML = flagCounter;
+}
+
+function timer() {
+  sec++;
+  render();
+}
+
+function stopTimer() {
+  clearInterval(interval);
+}
+
+// Removes "square" divs from grid-container in DOM
+
+function removeSquares() {
   let divEl = document.querySelectorAll(".square");
   for (let div of divEl) {
     div.remove();
   }
+}
 
-  // sets up objects, puts new squares in doc
+// sets up objects, puts new squares in doc
+
+function initialiseObjects() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       square.mine = false;
@@ -76,9 +237,11 @@ function init() {
       gridContainerEl.appendChild(squareDiv);
     });
   });
+}
 
-  // places mines in grid
+// Places mines in grid
 
+function placeMinesInGrid() {
   let mineCoords = [];
   let randomNums = [];
   for (let i = 0; i <= 39; i++) {
@@ -91,8 +254,10 @@ function init() {
   mineCoords.forEach(function (coordPair) {
     grid[coordPair[0]][coordPair[1]].mine = true;
   });
+}
 
-  // add grid array mines to class of equivalent div elements in DOM
+// add grid array mines to class of equivalent div elements in DOM
+function deployMinesToSquares() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       if (square.mine) {
@@ -103,12 +268,11 @@ function init() {
       }
     });
   });
-  // let mineEl = document.querySelectorAll(".mine");
-  // for (let mine of mineEl) {
-  //   mine.innerHTML = "<p>✪</p>";
-  // }
-  // place numbers around mines in grid array
+}
 
+// Adds property with numbers to grid objects that surround mines
+
+function surround() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       if (
@@ -302,7 +466,10 @@ function init() {
       }
     });
   });
+}
 
+// Sets squares in DOM to show if they surround a mine
+function deploySurrounders() {
   grid.forEach(function (row, rowNumber) {
     row.forEach(function (square, columnNumber) {
       divEl = document.getElementById(rowNumber + "," + columnNumber);
@@ -313,229 +480,18 @@ function init() {
       }
     });
   });
+}
 
-  //Adds hidden class to all divs in DOM-grid and all p elements
+//Adds hidden class to all divs in DOM-grid and all p elements
+function hidePs() {
   let divs = document.querySelectorAll(".square");
   for (let div of divs) {
     div.classList.add("hidden");
     div.querySelector("p").classList.add("hidden");
   }
-  // let ps = document.querySelectorAll("p");
-  // for (let p of ps) {
-  //   p.classList.add("hidden");
-  // }
-  console.log(grid);
-  console.log(mineCounter);
-
-  render();
-}
-// click handlers get coords from click and
-// set grid to 1 for left click, 2 for right click
-function gridClickHandler(event) {
-  if (event.target.id === "grid-container") {
-    return
-  }
-  if (interval === -1)
-    {interval = setInterval(timer, 1000)}
-  let coords = "";
-  if (event.target.tagName === "IMG") {
-    let imgParent = event.target.parentNode
-    let sqParent = imgParent.parentNode
-    coords = sqParent.id
-  } else if (event.target.tagName === "P") {
-    let parentEl = event.target.parentNode;
-    coords = parentEl.id;
-  } else {
-    coords = event.target.id;
-  }
-  console.log("Clicked " + coords);
-  let x = parseInt(coords.split(",")[0]);
-  let y = parseInt(coords.split(",")[1]);
-  if (grid[x][y].flagged) {
-    return;
-  } else {
-    console.log(x + y)
-    grid[x][y].hidden = false;
-    if (grid[x][y].mine) {
-      grid.forEach(function (row, rowNumber) {
-        row.forEach(function (square, columnNumber) {
-          square.hidden = false;
-          if (square.mine) {
-            square.sprout = true;
-          
-          }
-        
-        });
-      });
-      document.getElementById("reset").innerHTML = '🤮'
-      stopTimer()
-    }
-    if (grid[x][y].surround === 0) {
-      flood(x, y);
-    }
-  }
-  render();
 }
 
-function gridRightClickHandler(event) {
-  if (event.target.id === "grid-container") {
-    event.preventDefault();
-    return
-  }
-  let coords = "";
-  if (event.target.tagName === "IMG") {
-    let pParent = event.target.parentNode
-    let sqParent = pParent.parentNode
-    coords = sqParent.id
-  } else if (event.target.tagName === "P") {
-    let parentEl = event.target.parentNode;
-    coords = parentEl.id;
-  } else {
-    coords = event.target.id;
-  }
-  console.log("Right clicked " + coords);
-  event.preventDefault();
-  if (grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged) {
-    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = false;
-    flagCounter++;
-    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter++;
-    }
-  } 
-  else {
-    grid[coords.split(",")[0]][[coords.split(",")[1]]].flagged = true;
-    flagCounter--;
-    if (grid[coords.split(",")[0]][[coords.split(",")[1]]].mine) {
-      mineCounter--;
-    }
-    if (!mineCounter && flagCounter === 0) {
-      console.log("YOU WIN");
-      document.getElementById("reset").innerHTML = '😋'
-      stopTimer()
-      grid.forEach(function (row) {
-        row.forEach(function (square) {
-          if (!square.mine) {
-            square.hidden = false;
-          }
-        });
-      });
-    }
-  }
-  render();
-}
-
-// random number generator
-function getRandomNumber(max, min) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-
-
-
-
-
-// renders grid from array data
-function render() {
-  document.getElementById("timer").innerHTML = sec;
-  grid.forEach(function (row, rowNumber) {
-    row.forEach(function (square, columnNumber) {
-      divEl = document.getElementById(rowNumber + "," + columnNumber);
-      pEl = divEl.querySelector("p");
-      if (!square.hidden) {
-        divEl.classList.remove("hidden");
-        
-        pEl.classList.remove("hidden");
-      } else if (square.flagged) {
-        if (!divEl.classList.contains("flagged")) {
-          divEl.classList.add("flagged")
-          let flagPEl = document.createElement("p")
-          flagPEl.innerHTML = '☠️'
-          flagPEl.classList.add("flag")
-          divEl.appendChild(flagPEl)
-        }
-      } else if (!square.flagged) {
-        divEl.classList.remove("flagged");
-        if (divEl.lastChild.classList.contains("flag")) {
-          divEl.removeChild(divEl.lastChild)
-        }
-        if (square.surround) {
-          pEl.innerHTML = `${square.surround}`;
-          pEl.classList.add(`surround-${square.surround}`);
-          
-          
-        }
-      }
-      if (square.sprout) {
-        divEl.innerHTML = '<p><img src="img/sprout.png"></p>';
-      }
-    });
-  });
-  let flagEl = document.getElementById("flag-count");
-  flagEl.innerHTML = flagCounter;
-  }
-
-
-
-function timer() {
-sec++
-render()
-}
-
-function stopTimer() {
-  clearInterval(interval);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Floods grid with recursive revealing of squares if clear of mines
 function flood(a, b) {
   //central squares
   if (grid[a][b].location === "central") {
@@ -560,8 +516,8 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
+      }
     }
-  }
     let surroundArray = [
       [a - 1, b - 1],
       [a - 1, b],
@@ -582,7 +538,7 @@ function flood(a, b) {
         flood(pair[0], pair[1]);
       }
       if (grid[pair[0]][pair[1]].flagged) {
-        console.log("I'M FLAGGED!")
+        console.log("I'M FLAGGED!");
       }
       if (!grid[pair[0]][pair[1]].flagged) {
         grid[pair[0]][pair[1]].hidden = false;
@@ -603,8 +559,8 @@ function flood(a, b) {
         grid[a + 1][b + 1].surround > 0)
     ) {
       if (!grid[a][b].flagged) {
-      grid[a][b].hidden = false;
-      return;
+        grid[a][b].hidden = false;
+        return;
       }
     }
 
@@ -644,7 +600,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -685,7 +641,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -726,7 +682,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -763,7 +719,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -798,7 +754,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -833,7 +789,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
@@ -868,7 +824,7 @@ function flood(a, b) {
       if (!grid[a][b].flagged) {
         grid[a][b].hidden = false;
         return;
-    }
+      }
     }
 
     let surroundArray = [
