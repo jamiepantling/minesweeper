@@ -1,5 +1,7 @@
 # Sproutsweeper!
 
+[(Play *Sproutsweeper!*)](https://jamiepantling.github.io/sproutsweeper/)
+
 ## Introduction
 
 *Sproutsweeper!* is a version of the classic computer game "minesweeper". 
